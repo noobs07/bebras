@@ -150,9 +150,9 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
                 <div class="bg-white w-80 p-6 rounded-xl shadow-md text-center card-hover">
-                    <div
-                        class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-bebrasLightBlue text-bebrasBlue text-xl mb-4">
-                        <i class="fas fa-puzzle-piece"></i>
+                    <div class="w-full h-48 mb-4 overflow-hidden rounded-lg">
+                        <img src="{{ asset('/img/Lokakarya Nasional.jpeg') }}" alt="Lokakarya Nasional"
+                            class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-2">Lokakarya Nasional</h3>
                     <p class="text-gray-600 text-sm">
@@ -162,9 +162,9 @@
                 </div>
 
                 <div class="bg-white w-80 p-6 rounded-xl shadow-md text-center card-hover">
-                    <div
-                        class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-bebrasLightBlue text-bebrasBlue text-xl mb-4">
-                        <i class="fas fa-code"></i>
+                    <div class="w-full h-48 mb-4 overflow-hidden rounded-lg">
+                        <img src="{{ asset('/img/Lokakarya untuk Guru.jpeg') }}" alt="Lokakarya untuk Guru"
+                            class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-2">Lokakarya untuk Guru</h3>
                     <p class="text-gray-600 text-sm">
@@ -174,9 +174,9 @@
                 </div>
 
                 <div class="bg-white w-80 p-6 rounded-xl shadow-md text-center card-hover">
-                    <div
-                        class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-bebrasLightBlue text-bebrasBlue text-xl mb-4">
-                        <i class="fas fa-globe"></i>
+                    <div class="w-full h-48 mb-4 overflow-hidden rounded-lg">
+                        <img src="{{ asset('/img/Tantangan Berpikir.jpeg') }}" alt="Tantangan Berpikir Komputasional"
+                            class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-2">Tantangan Berpikir Komputasional Bebras</h3>
                     <p class="text-gray-600 text-sm">
