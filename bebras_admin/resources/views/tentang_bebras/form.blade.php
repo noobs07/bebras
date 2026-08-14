@@ -79,6 +79,31 @@
                                         @enderror
                                     </div>
 
+                                    <div class="col-md-12">
+                                        <label for="template" class="form-label">Gaya Tampilan (Template) <span class="text-danger">*</span></label>
+                                        <select name="template" id="template" class="form-select @error('template') is-invalid @enderror" required>
+                                            @php
+                                                $templates = [
+                                                    'dd_1' => 'Gaya 1 — Teks + Gambar (tanpa item pendukung)',
+                                                    'dd_2' => 'Gaya 2 — Teks + Dua Kolom (tanpa item pendukung)',
+                                                    'dd_3' => 'Gaya 3 — Teks + Grid Tujuan (dengan item: Tujuan)',
+                                                    'dd_4' => 'Gaya 4 — Teks + Grid Ruang Lingkup (dengan item: Ruang Lingkup)',
+                                                    'dd_5' => 'Gaya 5 — Teks + List Kegiatan & Kategori (dengan item: Kegiatan / Kategori)',
+                                                    'dd_6' => 'Gaya 6 — Teks + Timeline Sejarah (dengan item: Timeline)',
+                                                ];
+                                                $selectedTemplate = old('template', $data->template ?? 'dd_1');
+                                            @endphp
+                                            @foreach($templates as $val => $label)
+                                            <option value="{{ $val }}" {{ $selectedTemplate === $val ? 'selected' : '' }}>
+                                                {{ $label }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        @error('template')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <small class="text-muted">Pilihan template tidak dapat diubah setelah ada item pendukung yang ditambahkan.</small>
+                                    </div>
 
                                     <div class="col-md-12">
                                         <label for="slug" class="form-label">Slug</label>
@@ -139,114 +164,123 @@
                             </form>
                         </div>
                     </div>
+                     @if(isset($data) && in_array($data->template, ['dd_3','dd_4','dd_5','dd_6']))
+                     @php
+                         $templateTipeMap = [
+                             'dd_3' => [['value'=>'tujuan',              'label'=>'Tujuan']],
+                             'dd_4' => [['value'=>'ruang_lingkup',       'label'=>'Ruang Lingkup']],
+                             'dd_5' => [
+                                 ['value'=>'kegiatan_list',      'label'=>'List Kegiatan'],
+                                 ['value'=>'kategori_tantangan', 'label'=>'Kategori Tantangan'],
+                             ],
+                             'dd_6' => [['value'=>'timeline',            'label'=>'Timeline Sejarah']],
+                         ];
+                         $allowedTipes = $templateTipeMap[$data->template];
+                     @endphp
+                     <div class="card mt-4">
+                         <div class="card-header d-flex justify-content-between align-items-center">
+                             <h5 class="mb-0">Item Pendukung Halaman</h5>
+                             <button type="button" class="btn btn-primary btn-sm" onclick="openCreateItemModal()">
+                                 <i class="bx bx-plus me-1"></i> Tambah Item
+                             </button>
+                         </div>
+                         <div class="card-body">
+                             <div class="table-responsive">
+                                 <table class="table table-striped table-bordered">
+                                     <thead>
+                                         <tr>
+                                             <th>Tipe</th>
+                                             <th>Icon</th>
+                                             <th>Judul</th>
+                                             <th>Deskripsi</th>
+                                             <th>Bg Color</th>
+                                             <th>Urutan</th>
+                                             <th>Aksi</th>
+                                         </tr>
+                                     </thead>
+                                     <tbody>
+                                         @forelse($data->items->sortBy('urutan') as $item)
+                                             <tr>
+                                                 <td><span class="badge bg-label-info">{{ $item->tipe }}</span></td>
+                                                 <td><code>{{ $item->icon }}</code></td>
+                                                 <td><strong>{{ $item->judul }}</strong></td>
+                                                 <td>{!! Str::limit($item->deskripsi, 50) !!}</td>
+                                                 <td><code>{{ $item->bg_color }}</code></td>
+                                                 <td>{{ $item->urutan }}</td>
+                                                 <td>
+                                                     <div class="d-flex gap-1">
+                                                         <button type="button" class="btn btn-sm btn-warning" onclick="openEditItemModal({{ json_encode($item) }})">
+                                                             <i class="bx bx-edit"></i>
+                                                         </button>
+                                                         <form action="{{ route('tentang_bebras.items.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin?')">
+                                                             @csrf
+                                                             @method('DELETE')
+                                                             <button class="btn btn-sm btn-danger"><i class="bx bx-trash"></i></button>
+                                                         </form>
+                                                     </div>
+                                                 </td>
+                                             </tr>
+                                         @empty
+                                             <tr>
+                                                 <td colspan="7" class="text-center">Belum ada item pendukung untuk halaman ini.</td>
+                                             </tr>
+                                         @endforelse
+                                     </tbody>
+                                 </table>
+                             </div>
+                         </div>
+                     </div>
 
-                    @if(isset($data))
-                    <div class="card mt-4">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Item Pendukung Halaman (Grid / Timeline / List)</h5>
-                            <button type="button" class="btn btn-primary btn-sm" onclick="openCreateItemModal()">
-                                <i class="bx bx-plus me-1"></i> Tambah Item
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Tipe</th>
-                                            <th>Icon / Emoji / SVG</th>
-                                            <th>Judul</th>
-                                            <th>Deskripsi</th>
-                                            <th>Warna Latar Class</th>
-                                            <th>Urutan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($data->items->sortBy('urutan') as $item)
-                                            <tr>
-                                                <td><span class="badge bg-label-info">{{ $item->tipe }}</span></td>
-                                                <td><code>{{ $item->icon }}</code></td>
-                                                <td><strong>{{ $item->judul }}</strong></td>
-                                                <td>{!! Str::limit($item->deskripsi, 50) !!}</td>
-                                                <td><code>{{ $item->bg_color }}</code></td>
-                                                <td>{{ $item->urutan }}</td>
-                                                <td>
-                                                    <div class="d-flex gap-1">
-                                                        <button type="button" class="btn btn-sm btn-warning" onclick="openEditItemModal({{ json_encode($item) }})">
-                                                            <i class="bx bx-edit"></i>
-                                                        </button>
-                                                        <form action="{{ route('tentang_bebras.items.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button class="btn btn-sm btn-danger"><i class="bx bx-trash"></i></button>
-                                                        </form>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="7" class="text-center">Belum ada item pendukung untuk halaman ini.</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Modal untuk Tambah/Edit Item Pendukung -->
-                    <div class="modal fade" id="itemModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <form id="itemForm" method="POST" action="">
-                                @csrf
-                                <input type="hidden" name="_method" id="itemFormMethod" value="POST">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="itemModalTitle">Tambah Item Pendukung</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label class="form-label">Tipe <span class="text-danger">*</span></label>
-                                            <select name="tipe" id="item_tipe" class="form-select" required>
-                                                <option value="tujuan">Tujuan (dd_3)</option>
-                                                <option value="ruang_lingkup">Ruang Lingkup (dd_4)</option>
-                                                <option value="kegiatan_list">List Kegiatan (dd_5)</option>
-                                                <option value="kategori_tantangan">Kategori Tantangan (dd_5)</option>
-                                                <option value="timeline">Timeline Sejarah (dd_6)</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Icon / Emoji / Path SVG</label>
-                                            <input type="text" name="icon" id="item_icon" class="form-control" placeholder="🌱 atau path SVG">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Judul</label>
-                                            <input type="text" name="judul" id="item_judul" class="form-control" placeholder="Judul item">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Deskripsi / Detail</label>
-                                            <textarea name="deskripsi" id="item_deskripsi" class="form-control" rows="3" placeholder="Gunakan tag HTML jika diperlukan"></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Background Color Class (Tailwind)</label>
-                                            <input type="text" name="bg_color" id="item_bg_color" class="form-control" placeholder="bg-blue-100 atau gradient class">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Urutan <span class="text-danger">*</span></label>
-                                            <input type="number" name="urutan" id="item_urutan" class="form-control" value="0" required>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-                                        <button type="submit" class="btn btn-primary">Simpan Item</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    @endif
+                     <!-- Modal Tambah/Edit Item Pendukung -->
+                     <div class="modal fade" id="itemModal" tabindex="-1" aria-hidden="true">
+                         <div class="modal-dialog">
+                             <form id="itemForm" method="POST" action="">
+                                 @csrf
+                                 <input type="hidden" name="_method" id="itemFormMethod" value="POST">
+                                 <div class="modal-content">
+                                     <div class="modal-header">
+                                         <h5 class="modal-title" id="itemModalTitle">Tambah Item Pendukung</h5>
+                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                     </div>
+                                     <div class="modal-body">
+                                         <div class="mb-3">
+                                             <label class="form-label">Tipe <span class="text-danger">*</span></label>
+                                             <select name="tipe" id="item_tipe" class="form-select" required>
+                                                 @foreach($allowedTipes as $tipe)
+                                                 <option value="{{ $tipe['value'] }}">{{ $tipe['label'] }}</option>
+                                                 @endforeach
+                                             </select>
+                                         </div>
+                                         <div class="mb-3">
+                                             <label class="form-label">Icon / Emoji / Path SVG</label>
+                                             <input type="text" name="icon" id="item_icon" class="form-control" placeholder="🌱 atau path SVG">
+                                         </div>
+                                         <div class="mb-3">
+                                             <label class="form-label">Judul</label>
+                                             <input type="text" name="judul" id="item_judul" class="form-control" placeholder="Judul item">
+                                         </div>
+                                         <div class="mb-3">
+                                             <label class="form-label">Deskripsi / Detail</label>
+                                             <textarea name="deskripsi" id="item_deskripsi" class="form-control" rows="3" placeholder="Gunakan tag HTML jika diperlukan"></textarea>
+                                         </div>
+                                         <div class="mb-3">
+                                             <label class="form-label">Background Color Class (Tailwind)</label>
+                                             <input type="text" name="bg_color" id="item_bg_color" class="form-control" placeholder="bg-blue-100 atau gradient class">
+                                         </div>
+                                         <div class="mb-3">
+                                             <label class="form-label">Urutan <span class="text-danger">*</span></label>
+                                             <input type="number" name="urutan" id="item_urutan" class="form-control" value="0" required>
+                                         </div>
+                                     </div>
+                                     <div class="modal-footer">
+                                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                                         <button type="submit" class="btn btn-primary">Simpan Item</button>
+                                     </div>
+                                 </div>
+                             </form>
+                         </div>
+                     </div>
+                     @endif
 
                 </div>
             </div>

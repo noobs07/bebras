@@ -17,6 +17,7 @@ class TentangBebras extends Model
         'konten',
         'gambar',
         'urutan',
+        'template',
     ];
 
     public function items()

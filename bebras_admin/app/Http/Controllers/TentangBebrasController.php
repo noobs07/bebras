@@ -89,11 +89,12 @@ class TentangBebrasController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'slug'   => 'required|unique:tentang_bebras,slug',
-            'judul'  => 'required',
-            'konten' => 'required',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png',
-            'urutan' => 'required|integer',
+            'slug'     => 'required|unique:tentang_bebras,slug',
+            'judul'    => 'required',
+            'konten'   => 'required',
+            'gambar'   => 'nullable|image|mimes:jpg,jpeg,png',
+            'urutan'   => 'required|integer',
+            'template' => 'required|in:dd_1,dd_2,dd_3,dd_4,dd_5,dd_6',
         ]);
 
         DB::beginTransaction();
@@ -127,11 +128,12 @@ class TentangBebrasController extends Controller
         $data = TentangBebras::findOrFail($id);
 
         $validated = $request->validate([
-            'slug'   => 'required|unique:tentang_bebras,slug,' . $id,
-            'judul'  => 'required|string|max:255',
-            'konten' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
-            'urutan' => 'required|integer|min:0',
+            'slug'     => 'required|unique:tentang_bebras,slug,' . $id,
+            'judul'    => 'required|string|max:255',
+            'konten'   => 'required|string',
+            'gambar'   => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+            'urutan'   => 'required|integer|min:0',
+            'template' => 'required|in:dd_1,dd_2,dd_3,dd_4,dd_5,dd_6',
         ]);
 
         DB::beginTransaction();
