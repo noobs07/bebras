@@ -81,7 +81,10 @@
 
                                     <div class="col-md-12">
                                         <label for="template" class="form-label">Gaya Tampilan (Template) <span class="text-danger">*</span></label>
-                                        <select name="template" id="template" class="form-select @error('template') is-invalid @enderror" required>
+                                        @php
+                                            $hasItems = isset($data) && $data->items->count() > 0;
+                                        @endphp
+                                        <select name="template" id="template" class="form-select @error('template') is-invalid @enderror" required {{ $hasItems ? 'disabled' : '' }}>
                                             @php
                                                 $templates = [
                                                     'dd_1' => 'Gaya 1 — Teks + Gambar (tanpa item pendukung)',
@@ -99,6 +102,9 @@
                                             </option>
                                             @endforeach
                                         </select>
+                                        @if($hasItems)
+                                            <input type="hidden" name="template" value="{{ $data->template }}">
+                                        @endif
                                         @error('template')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -116,7 +122,10 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label for="konten" class="form-label">Konten</label>
+                                        <label for="konten" class="form-label">
+                                            Konten
+                                            <span class="badge bg-label-warning ms-1" id="konten-warning" style="display:none;">Tidak ditampilkan di Frontend untuk Gaya ini</span>
+                                        </label>
                                         <textarea  name="konten" class="form-control tinymce-editor @error('konten') is-invalid @enderror" rows="6">{{ old('konten', $data->konten ?? '-') }}</textarea>
                                         @error('konten')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -124,7 +133,10 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <label for="gambar" class="form-label fw-bold">Gambar</label>
+                                        <label for="gambar" class="form-label fw-bold">
+                                            Gambar
+                                            <span class="badge bg-label-warning ms-1" id="gambar-warning" style="display:none;">Tidak ditampilkan di Frontend untuk Gaya ini</span>
+                                        </label>
                                         <div class="d-flex align-items-center p-3 border rounded shadow-sm bg-light gap-4">
 
                                             {{-- Input File --}}
@@ -163,21 +175,23 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
-                     @if(isset($data) && in_array($data->template, ['dd_3','dd_4','dd_5','dd_6']))
-                     @php
-                         $templateTipeMap = [
-                             'dd_3' => [['value'=>'tujuan',              'label'=>'Tujuan']],
-                             'dd_4' => [['value'=>'ruang_lingkup',       'label'=>'Ruang Lingkup']],
-                             'dd_5' => [
-                                 ['value'=>'kegiatan_list',      'label'=>'List Kegiatan'],
-                                 ['value'=>'kategori_tantangan', 'label'=>'Kategori Tantangan'],
-                             ],
-                             'dd_6' => [['value'=>'timeline',            'label'=>'Timeline Sejarah']],
-                         ];
-                         $allowedTipes = $templateTipeMap[$data->template];
-                     @endphp
-                     <div class="card mt-4">
+                                    @if(!isset($data))
+                     <!-- Info Box for Create Mode -->
+                     <div class="card mt-4" id="item-manager-info-wrapper" style="display:none;">
+                         <div class="card-body">
+                             <div class="alert alert-info mb-0 d-flex align-items-center">
+                                 <i class="bx bx-info-circle me-2 fs-4"></i>
+                                 <div>
+                                     <strong>Info Item Pendukung:</strong> Halaman dengan template/gaya yang dipilih mendukung penambahan item pendukung (seperti daftar tujuan, ruang lingkup, kegiatan, atau timeline sejarah). Anda dapat mulai mengelola dan menambahkan item pendukung setelah menyimpan halaman ini pertama kali.
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     @endif
+
+                     @if(isset($data))
+                     <!-- Item Manager for Edit Mode -->
+                     <div id="item-manager-wrapper" class="card mt-4" style="display:none;">
                          <div class="card-header d-flex justify-content-between align-items-center">
                              <h5 class="mb-0">Item Pendukung Halaman</h5>
                              <button type="button" class="btn btn-primary btn-sm" onclick="openCreateItemModal()">
@@ -246,9 +260,7 @@
                                          <div class="mb-3">
                                              <label class="form-label">Tipe <span class="text-danger">*</span></label>
                                              <select name="tipe" id="item_tipe" class="form-select" required>
-                                                 @foreach($allowedTipes as $tipe)
-                                                 <option value="{{ $tipe['value'] }}">{{ $tipe['label'] }}</option>
-                                                 @endforeach
+                                                 <!-- Options populated dynamically based on active template in JavaScript -->
                                              </select>
                                          </div>
                                          <div class="mb-3">
@@ -264,8 +276,29 @@
                                              <textarea name="deskripsi" id="item_deskripsi" class="form-control" rows="3" placeholder="Gunakan tag HTML jika diperlukan"></textarea>
                                          </div>
                                          <div class="mb-3">
-                                             <label class="form-label">Background Color Class (Tailwind)</label>
-                                             <input type="text" name="bg_color" id="item_bg_color" class="form-control" placeholder="bg-blue-100 atau gradient class">
+                                             <label class="form-label">Warna Latar Belakang (Class Tailwind)</label>
+                                             <select name="bg_color" id="item_bg_color" class="form-select">
+                                                 <option value="">Default (Transparan / Putih)</option>
+                                                 
+                                                 <!-- Solid / Pastel Backgrounds -->
+                                                 <option value="bg-[#F8FAE5]">Hijau Muda Pastel</option>
+                                                 <option value="bg-[#EAF4FC]">Biru Muda Pastel</option>
+                                                 <option value="bg-[#FFF2F2]">Merah Muda Pastel</option>
+                                                 <option value="bg-[#F0F4FF]">Indigo Muda Pastel</option>
+                                                 
+                                                 <!-- Gradient Backgrounds (Light) -->
+                                                 <option value="from-amber-100 to-yellow-200">Gradasi Kuning (Light)</option>
+                                                 <option value="from-green-100 to-emerald-200">Gradasi Hijau (Light)</option>
+                                                 <option value="from-sky-100 to-blue-200">Gradasi Biru (Light)</option>
+                                                 <option value="from-pink-100 to-rose-200">Gradasi Merah Muda (Light)</option>
+                                                 
+                                                 <!-- Gradient Backgrounds (Vibrant) -->
+                                                 <option value="from-indigo-500 via-fuchsia-500 to-pink-500">Gradasi Indigo-Pink (Vibrant)</option>
+                                                 <option value="from-emerald-500 via-teal-500 to-cyan-500">Gradasi Hijau-Biru (Vibrant)</option>
+                                                 <option value="from-amber-500 via-orange-500 to-red-500">Gradasi Orange-Red (Vibrant)</option>
+                                                 <option value="from-sky-500 via-blue-500 to-indigo-500">Gradasi Sky-Blue (Vibrant)</option>
+                                                 <option value="from-fuchsia-500 via-purple-500 to-violet-500">Gradasi Ungu-Fuchsia (Vibrant)</option>
+                                             </select>
                                          </div>
                                          <div class="mb-3">
                                              <label class="form-label">Urutan <span class="text-danger">*</span></label>
@@ -294,6 +327,9 @@
         document.addEventListener("DOMContentLoaded", function() {
             const judulInput = document.getElementById('judul');
             const slugInput = document.getElementById('slug');
+            const templateSelect = document.getElementById('template');
+            const kontenWarning = document.getElementById('konten-warning');
+            const gambarWarning = document.getElementById('gambar-warning');
             let isManuallyEdited = slugInput.value.trim() !== '';
 
             judulInput.addEventListener('input', function() {
@@ -314,6 +350,67 @@
                     .replace(/^-+/, '')             // Trim - from start of text
                     .replace(/-+$/, '');            // Trim - from end of text
             }
+
+            const TEMPLATE_ITEM_TYPES = {
+                dd_3: [{value: 'tujuan', label: 'Tujuan'}],
+                dd_4: [{value: 'ruang_lingkup', label: 'Ruang Lingkup'}],
+                dd_5: [
+                    {value: 'kegiatan_list', label: 'List Kegiatan'},
+                    {value: 'kategori_tantangan', label: 'Kategori Tantangan'}
+                ],
+                dd_6: [{value: 'timeline', label: 'Timeline Sejarah'}]
+            };
+
+            function updateWarnings(templateValue) {
+                // dd_4: Konten and Gambar are NOT used in Frontend
+                if (templateValue === 'dd_4') {
+                    kontenWarning.style.display = '';
+                    gambarWarning.style.display = '';
+                } 
+                // dd_6: Gambar is NOT used in Frontend, Konten IS used
+                else if (templateValue === 'dd_6') {
+                    kontenWarning.style.display = 'none';
+                    gambarWarning.style.display = '';
+                } 
+                // All other templates use both Konten and Gambar
+                else {
+                    kontenWarning.style.display = 'none';
+                    gambarWarning.style.display = 'none';
+                }
+
+                // Show/hide item manager wrappers based on support
+                const supportsItems = ['dd_3', 'dd_4', 'dd_5', 'dd_6'].includes(templateValue);
+                
+                const itemInfoWrapper = document.getElementById('item-manager-info-wrapper');
+                if (itemInfoWrapper) {
+                    itemInfoWrapper.style.display = supportsItems ? '' : 'none';
+                }
+
+                const itemManagerWrapper = document.getElementById('item-manager-wrapper');
+                if (itemManagerWrapper) {
+                    itemManagerWrapper.style.display = supportsItems ? '' : 'none';
+                }
+
+                // Populate modal tipe options dynamically
+                const itemTipeSelect = document.getElementById('item_tipe');
+                if (itemTipeSelect) {
+                    itemTipeSelect.innerHTML = '';
+                    const allowedTypes = TEMPLATE_ITEM_TYPES[templateValue] || [];
+                    allowedTypes.forEach(function(type) {
+                        const opt = document.createElement('option');
+                        opt.value = type.value;
+                        opt.innerText = type.label;
+                        itemTipeSelect.appendChild(opt);
+                    });
+                }
+            }
+
+            if (templateSelect) {
+                updateWarnings(templateSelect.value);
+                templateSelect.addEventListener('change', function() {
+                    updateWarnings(this.value);
+                });
+            }
         });
 
         function openCreateItemModal() {
@@ -321,7 +418,9 @@
             $('#itemFormMethod').val('POST');
             $('#itemForm').attr('action', "{{ isset($data) ? route('tentang_bebras.items.store', $data->id) : '' }}");
             
-            $('#item_tipe').val('tujuan');
+            // Set first option value from the dynamically populated list
+            const firstOptVal = $('#item_tipe option:first').val();
+            $('#item_tipe').val(firstOptVal || 'tujuan');
             $('#item_icon').val('');
             $('#item_judul').val('');
             $('#item_deskripsi').val('');

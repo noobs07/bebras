@@ -146,7 +146,8 @@ class CmsContentSeeder extends Seeder
             'judul' => 'Apa itu Berpikir Komputasional?',
             'konten' => 'Berpikir komputasional (Computational Thinking) adalah metode menyelesaikan persoalan dengan menerapkan teknik ilmu komputer (informatika). Tantangan Bebras menyajikan soal-soal yang mendorong siswa untuk berpikir kreatif dan kritis dalam menyelesaikan persoalan dengan menerapkan konsep-konsep berpikir komputasional.',
             'gambar' => 'img/brain.png',
-            'urutan' => 1
+            'urutan' => 1,
+            'template' => 'dd_1'
         ]);
 
         // dd_2
@@ -155,7 +156,8 @@ class CmsContentSeeder extends Seeder
             'judul' => 'Apa itu Bebras?',
             'konten' => '<p class="text-justify text-md">Secara harfiah, “Bebras” adalah kata dalam bahasa Lithuania, yang berarti “berang-berang” dalam bahasa Indonesia. Prof. Valentina Dagiene dari Universitas Vilnius, Lithuania adalah yang mencetuskan gagasan Bebras Computational Thinking Challenge, yang saat ini diikuti oleh lebih dari 55 negara di dunia.</p><p class="text-justify text-md mt-4">Bebras adalah sebuah inisiatif internasional yang tujuannya adalah untuk mempromosikan Computational Thinking (Berpikir dengan landasan Komputasi atau Informatika), di kalangan guru dan murid mulai tingkat SD, serta untuk masyarakat luas.</p><p class="text-justify text-md mt-4">Cara untuk promosi adalah dengan menyelenggarakan kegiatan kompetisi secara daring (on line), yang disebut sebagai “Tantangan Bebras”. Tantangan Bebras bukan hanya sekedar untuk menang. Selain untuk berlomba, tantangan Bebras juga bertujuan agar siswa belajar Computational Thinking selama maupun setelah lomba.</p><p class="text-justify text-md mt-4">Di Indonesia, kompetisi dapat dilaksanakan di sekolah yang mempunyai cukup komputer, atau di universitas pembina.</p><p class="text-justify text-md mt-4">Selama Kompetisi, siswa harus memberikan solusi untuk persoalan yang disebut “Soal Bebras”. Soal-soal yang bertema komputasi/informatika ini dirancang semenarik mungkin, dan seharusnya dapat dijawab oleh siswa tanpa pengetahuan sebelumnya tentang komputasi atau informatika.</p><p class="text-justify text-md mt-4">Setiap soal Bebras mengandung aspek komputasi atau informatika dan dimaksudkan untuk menguji bakat peserta untuk berpikir komputasi atau informatika. Untuk menjawab soal-soal Bebras, secara alamiah, siswa dituntut untuk berpikir terkait dengan informasi, struktur diskrit, komputasi, pengolahan data, serta harus menggunakan konsep algoritmik.</p>',
             'gambar' => 'img/pilnas.png',
-            'urutan' => 2
+            'urutan' => 2,
+            'template' => 'dd_2'
         ]);
 
         // dd_3
@@ -164,7 +166,8 @@ class CmsContentSeeder extends Seeder
             'judul' => 'Tujuan Kami',
             'konten' => '<p class="text-justify text-md">Tujuan utamanya adalah untuk mempromosikan informatika dan berpikir komputasi kepada para guru dan anak-anak muda khususnya, di kalangan pengambil keputusan di bidang pendidikan, dan masyarakat luas.</p><p class="text-justify text-md mt-4">Komputer dan perangkat teknologi lainnya saat ini menjadi penting untuk membuat masyarakat umum mengetahui komputasi atau informatika, tidak hanya sebagai teknologi, tetapi juga sebagai ilmu untuk mendidik mereka dan membuat pengalaman mereka dengan teknologi yang lebih baik.</p>',
             'gambar' => 'img/goal.png',
-            'urutan' => 3
+            'urutan' => 3,
+            'template' => 'dd_3'
         ]);
         // dd_3 items
         $dd3->items()->createMany([
@@ -180,7 +183,8 @@ class CmsContentSeeder extends Seeder
             'slug' => 'dd_4',
             'judul' => 'Ruang lingkup kegiatan bebras di antaranya adalah:',
             'konten' => '',
-            'urutan' => 4
+            'urutan' => 4,
+            'template' => 'dd_4'
         ]);
         // dd_4 items (using SVG paths as icons)
         $dd4->items()->createMany([
@@ -197,7 +201,8 @@ class CmsContentSeeder extends Seeder
             'judul' => 'Kegiatan Bebras Indonesia',
             'konten' => '<p class="text-gray-700 dark:text-gray-300 text-justify mb-6">Kegiatan Bebras Indonesia terdiri dari beberapa agenda rutin dan tambahan untuk mendukung pengembangan berpikir komputasional bagi guru, siswa, dan masyarakat luas.</p>',
             'gambar' => 'img/logo.jpg',
-            'urutan' => 5
+            'urutan' => 5,
+            'template' => 'dd_5'
         ]);
         // dd_5 items (lists & categories)
         $dd5->items()->createMany([
@@ -218,8 +223,9 @@ class CmsContentSeeder extends Seeder
         $dd6 = TentangBebras::create([
             'slug' => 'dd_6',
             'judul' => 'Sejarah Bebras Indonesia',
-            'konten' => 'Perjalanan awal Bebras di Indonesia sejak tahun 2016',
-            'urutan' => 6
+            'konten' => 'Perjalanan awal Bebras di Indonesia since tahun 2016',
+            'urutan' => 6,
+            'template' => 'dd_6'
         ]);
         $dd6->items()->createMany([
             ['tipe' => 'timeline', 'judul' => 'Februari 2016', 'deskripsi' => 'Setelah kunjungannya ke Indonesia, <strong>Prof. Valentina Dagienė</strong> (Vilnius University, Lithuania) penggagas Bebras Internasional, mengundang Indonesia menjadi <em>observer</em> pada Workshop Internasional Bebras bulan Mei 2016 di Bodrum, Turki.', 'urutan' => 1],
