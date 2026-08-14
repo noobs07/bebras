@@ -22,34 +22,21 @@
             <!-- Cards -->
             <div class="grid gap-6 md:grid-cols-2">
 
-                <!-- Card 1 -->
+                @foreach ($platforms as $platform)
+                <!-- Card -->
                 <div
                     class="bg-gray-50 rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col items-center text-center">
-                    <img src="{{ asset('img/gdp-logo.png') }}" alt="Olympia Logo" class="w-28 h-28 object-contain mb-4">
-                    <h2 class="text-xl font-bold text-gray-900 mb-2">Olympia.id</h2>
+                    <img src="{{ (strpos($platform->gambar, 'latihan/') === 0) ? asset('storage/' . $platform->gambar) : asset($platform->gambar) }}" alt="{{ $platform->nama }}" class="w-28 h-28 object-contain mb-4">
+                    <h2 class="text-xl font-bold text-gray-900 mb-2">{{ $platform->nama }}</h2>
                     <p class="text-gray-600 text-sm mb-4">
-                        Silakan unduh panduan latihan bagi akun baru.<br>
-                        Olympia powered by <span class="font-semibold">GDP Labs</span>.
+                        {!! $platform->deskripsi !!}
                     </p>
-                    <a href="https://olympia.id" target="_blank"
+                    <a href="{{ $platform->link }}" target="_blank"
                         class="inline-block px-4 py-2 rounded-lg bg-bebrasBlue text-white font-medium hover:bg-blue-700 transition">
-                        Kunjungi Olympia
+                        Kunjungi {{ $platform->nama }}
                     </a>
                 </div>
-
-                <!-- Card 2 -->
-                <div
-                    class="bg-gray-50 rounded-xl shadow hover:shadow-lg transition p-6 flex flex-col items-center text-center">
-                    <img src="{{ asset('img/logo.jpg') }}" alt="Bebras Logo" class="w-28 h-28 object-contain mb-4">
-                    <h2 class="text-xl font-bold text-gray-900 mb-2">latihan.bebras.or.id</h2>
-                    <p class="text-gray-600 text-sm mb-4">
-                        Platform latihan resmi <span class="font-semibold">Bebras Indonesia</span>.
-                    </p>
-                    <a href="https://latihan.bebras.or.id" target="_blank"
-                        class="inline-block px-4 py-2 rounded-lg bg-bebrasBlue text-white font-medium hover:bg-blue-700 transition">
-                        Kunjungi Latihan
-                    </a>
-                </div>
+                @endforeach
 
             </div>
         </div>

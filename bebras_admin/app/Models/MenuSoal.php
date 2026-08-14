@@ -31,4 +31,14 @@ class MenuSoal extends Model
     {
         return $this->hasMany(MenuSoal::class, 'parent_id')->orderBy('urutan');
     }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(MenuSoalItem::class, 'menu_soal_id')->orderBy('urutan');
+    }
+
+    public function challenges(): HasMany
+    {
+        return $this->hasMany(SoalChallenge::class, 'menu_soal_id');
+    }
 }

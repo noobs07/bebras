@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Kegiatan\WorkshopController;
+use App\Http\Controllers\BannerController;
+use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LatihanController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SoalController;
 use App\Http\Controllers\TentangBebrasController;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +43,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{id}', [TentangBebrasController::class, 'update'])->name('tentang_bebras.update');
         Route::delete('/{id}', [TentangBebrasController::class, 'destroy'])->name('tentang_bebras.destroy');
 
+        // Child items routes
+        Route::post('/{tentang_bebras_id}/items', [TentangBebrasController::class, 'storeItemChild'])->name('tentang_bebras.items.store');
+        Route::put('/items/{id}', [TentangBebrasController::class, 'updateItemChild'])->name('tentang_bebras.items.update');
+        Route::delete('/items/{id}', [TentangBebrasController::class, 'destroyItemChild'])->name('tentang_bebras.items.destroy');
     });
 
     Route::prefix('soal-bebras')->group(function () {
@@ -73,8 +79,37 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{id}/deskripsi', [LatihanController::class, 'deskripsi'])->name('latihan.deskripsi');
     });
 
+    // Banner (Carousel)
+    Route::prefix('banner')->group(function () {
+        Route::get('/', [BannerController::class, 'index'])->name('banner.index');
+        Route::get('/list', [BannerController::class, 'list'])->name('banner.list');
+        Route::get('/create', [BannerController::class, 'create'])->name('banner.create');
+        Route::post('/store', [BannerController::class, 'store'])->name('banner.store');
+        Route::get('/{id}/edit', [BannerController::class, 'edit'])->name('banner.edit');
+        Route::put('/{id}', [BannerController::class, 'update'])->name('banner.update');
+        Route::delete('/{id}', [BannerController::class, 'destroy'])->name('banner.destroy');
+    });
+
+    // Kegiatan (Utama + Workshop 2017)
     Route::prefix('kegiatan')->group(function () {
-        Route::get('/workshop', [WorkshopController::class, 'index'])->name('workshop.index');
+        Route::get('/', [KegiatanController::class, 'index'])->name('kegiatan.index');
+        Route::get('/list', [KegiatanController::class, 'list'])->name('kegiatan.list');
+        Route::get('/create', [KegiatanController::class, 'create'])->name('kegiatan.create');
+        Route::post('/store', [KegiatanController::class, 'store'])->name('kegiatan.store');
+        Route::get('/{id}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
+        Route::put('/{id}', [KegiatanController::class, 'update'])->name('kegiatan.update');
+        Route::delete('/{id}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
+    });
+
+    // Pengaturan Situs
+    Route::prefix('pengaturan')->group(function () {
+        Route::get('/', [SettingController::class, 'index'])->name('setting.index');
+        Route::get('/list', [SettingController::class, 'list'])->name('setting.list');
+        Route::get('/create', [SettingController::class, 'create'])->name('setting.create');
+        Route::post('/store', [SettingController::class, 'store'])->name('setting.store');
+        Route::get('/{id}/edit', [SettingController::class, 'edit'])->name('setting.edit');
+        Route::put('/{id}', [SettingController::class, 'update'])->name('setting.update');
+        Route::delete('/{id}', [SettingController::class, 'destroy'])->name('setting.destroy');
     });
 
 });

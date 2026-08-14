@@ -88,17 +88,17 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Slug -->
-                                    <div class="col-md-6">
-                                        <label for="slug" class="form-label">Slug</label>
-                                        <input type="text" id="slug" name="slug"
-                                            value="{{ old('slug', $data->slug ?? '') }}"
-                                            class="form-control @error('slug') is-invalid @enderror"
-                                            placeholder="Slug otomatis dari nama menu" readonly>
-                                        @error('slug')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                                     <!-- Slug -->
+                                     <div class="col-md-6">
+                                         <label for="slug" class="form-label">Slug</label>
+                                         <input type="text" id="slug" name="slug"
+                                             value="{{ old('slug', $data->slug ?? '') }}"
+                                             class="form-control @error('slug') is-invalid @enderror"
+                                             placeholder="Ketik nama menu untuk otomatisasi, atau buat kustom">
+                                         @error('slug')
+                                             <div class="invalid-feedback">{{ $message }}</div>
+                                         @enderror
+                                     </div>
 
                                     <!-- Urutan -->
                                     <div class="col-md-6">
@@ -178,15 +178,28 @@
 @push('js')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Slug otomatis
-            document.getElementById('nama_menu').addEventListener('keyup', function() {
-                let slug = this.value.toLowerCase()
-                    .replace(/ /g, '-')
-                    .replace(/[^\w-]+/g, '');
-                document.getElementById('slug').value = slug;
+            const namaMenuInput = document.getElementById('nama_menu');
+            const slugInput = document.getElementById('slug');
+            let isManuallyEdited = slugInput.value.trim() !== '';
+
+            namaMenuInput.addEventListener('input', function() {
+                if (!isManuallyEdited) {
+                    slugInput.value = generateSlug(this.value);
+                }
             });
 
-            // TinyMCE sudah dipanggil via push js, otomatis inisialisasi
+            slugInput.addEventListener('input', function() {
+                isManuallyEdited = true;
+            });
+
+            function generateSlug(text) {
+                return text.toString().toLowerCase()
+                    .replace(/\s+/g, '-')           // Replace spaces with -
+                    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                    .replace(/^-+/, '')             // Trim - from start of text
+                    .replace(/-+$/, '');            // Trim - from end of text
+            }
         });
     </script>
 @endpush

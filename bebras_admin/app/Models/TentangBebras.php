@@ -16,4 +16,9 @@ class TentangBebras extends Model
         'gambar',
         'urutan',
     ];
+
+    public function items()
+    {
+        return $this->hasMany(TentangBebrasItem::class, 'tentang_bebras_id')->orderBy('urutan', 'asc');
+    }
 }

@@ -1,5 +1,5 @@
 @extends('app')
-@section('title', 'Tujuan Kami')
+@section('title', $page->judul)
 
 @section('content')
     <div class="w-full p-4">
@@ -11,63 +11,33 @@
                     <div class="flex flex-col md:flex-row items-center md:items-start md:justify-between gap-4 mb-5">
                         <div class="flex-1">
                             <h1 class="text-3xl md:text-4xl font-bold mb-4 mt-3">
-                                Tujuan Kami
+                                {{ $page->judul }}
                             </h1>
                         </div>
+                        @if ($page->gambar)
                         <div class="flex-shrink-0">
-                            <img src="{{ asset('img/goal.png') }}" alt="Tujuan"
+                            <img src="{{ (strpos($page->gambar, 'img/') === 0) ? asset($page->gambar) : asset('storage/' . $page->gambar) }}" alt="{{ $page->judul }}"
                                 class="w-full max-w-[90px] h-auto object-cover rounded-lg">
                         </div>
+                        @endif
                     </div>
 
                     <!-- Paragraf -->
-                    <p class="text-gray-700 text-justify text-md">
-                        Tujuan utamanya adalah untuk mempromosikan informatika dan berpikir komputasi kepada para guru dan
-                        anak-anak muda khususnya, di kalangan pengambil keputusan di bidang pendidikan, dan masyarakat luas.
-                    </p>
-                    <p class="text-gray-700 text-justify text-md mt-4">
-                        Komputer dan perangkat teknologi lainnya saat ini menjadi penting untuk membuat masyarakat umum
-                        mengetahui komputasi atau informatika, tidak hanya sebagai teknologi, tetapi juga sebagai ilmu untuk
-                        mendidik mereka dan membuat pengalaman mereka dengan teknologi yang lebih baik.
-                    </p>
+                    <div class="text-gray-700 text-justify text-md">
+                        {!! $page->konten !!}
+                    </div>
 
                     <!-- Daftar Tujuan -->
                     <ul class="grid gap-4 sm:grid-cols-2 mt-6">
+                        @foreach ($page->items as $index => $item)
                         <li
-                            class="group relative overflow-hidden rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition hover:shadow-md">
-                            <h3 class="font-semibold text-gray-800">🌱 Menumbuhkan kreativitas & berpikir komputasi</h3>
+                            class="group relative overflow-hidden rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition hover:shadow-md {{ $index === 4 ? 'sm:col-span-2' : '' }}">
+                            <h3 class="font-semibold text-gray-800">{{ $item->icon }} {{ $item->judul }}</h3>
                             <p class="mt-1 text-sm text-gray-600">
-                                Mendorong cara berpikir terstruktur, eksploratif, dan berbasis data.
+                                {{ $item->deskripsi }}
                             </p>
                         </li>
-                        <li
-                            class="group relative overflow-hidden rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition hover:shadow-md">
-                            <h3 class="font-semibold text-gray-800">💡 Pemahaman teknologi informasi</h3>
-                            <p class="mt-1 text-sm text-gray-600">
-                                Konsep dipetakan ke praktik agar lebih mudah diserap.
-                            </p>
-                        </li>
-                        <li
-                            class="group relative overflow-hidden rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition hover:shadow-md">
-                            <h3 class="font-semibold text-gray-800">🚀 Antusiasme dalam belajar</h3>
-                            <p class="mt-1 text-sm text-gray-600">
-                                Aktivitas berbasis proyek membuat siswa lebih semangat.
-                            </p>
-                        </li>
-                        <li
-                            class="group relative overflow-hidden rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition hover:shadow-md">
-                            <h3 class="font-semibold text-gray-800">🖥️ Literasi digital sejak dini</h3>
-                            <p class="mt-1 text-sm text-gray-600">
-                                Melibatkan siswa memanfaatkan komputer & aplikasi sejak sekolah dasar.
-                            </p>
-                        </li>
-                        <li
-                            class="group relative overflow-hidden rounded-xl border border-gray-300 bg-white p-4 shadow-sm transition hover:shadow-md sm:col-span-2">
-                            <h3 class="font-semibold text-gray-800">📘 Manfaat TI untuk semua mata pelajaran</h3>
-                            <p class="mt-1 text-sm text-gray-600">
-                                Membantu memahami, menganalisis, dan mempresentasikan berbagai pelajaran.
-                            </p>
-                        </li>
+                        @endforeach
                     </ul>
                 </div>
 

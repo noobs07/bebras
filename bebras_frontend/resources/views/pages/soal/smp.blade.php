@@ -10,67 +10,59 @@
                 <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-snug text-center md:text-left">
                     Contoh Soal <span class="text-blue-600">Penggalang</span> <br class="md:hidden" /> untuk Siswa SMP
                 </h1>
-                <img src="{{ asset('./img/b_countdown.jpg') }}" alt="Logo Bebras"
+                @if ($menu->gambar)
+                <img src="{{ (strpos($menu->gambar, 'img/') === 0) ? asset($menu->gambar) : asset('storage/' . $menu->gambar) }}" alt="Logo Bebras"
                     class="w-28 h-20 md:w-36 md:h-24 rounded-xl shadow-md object-cover mx-auto md:mx-0">
+                @endif
             </div>
 
             <!-- Soal -->
             <div class="space-y-6">
                 <!-- Judul Soal -->
                 <div>
-                    <span class="text-sm font-semibold text-orange-600 uppercase tracking-wider">Kategori Usia 15-16</span>
+                    <span class="text-sm font-semibold text-orange-600 uppercase tracking-wider">{{ $challenge->kategori_umur }}</span>
                     <h2 class="text-3xl font-bold text-gray-800 mt-1 text-center">
-                        Teman
+                        {{ $challenge->judul }}
                     </h2>
                 </div>
 
                 <!-- Gambar utama -->
                 <div class="space-y-4">
-                    <img src="{{ asset('/img/smp_1.png') }}" alt="Soal SMP"
+                    @if ($challenge->gambar_soal_1)
+                    <img src="{{ (strpos($challenge->gambar_soal_1, 'img/') === 0) ? asset($challenge->gambar_soal_1) : asset('storage/' . $challenge->gambar_soal_1) }}" alt="Soal SMP"
                         class="rounded-2xl shadow-lg mx-auto w-52 h-52 object-contain bg-white">
+                    @endif
 
                     <!-- Info Soal -->
-
                     <p class="text-base font-semibold text-gray-700 bg-gray-100 p-4 rounded-xl shadow text-center">
-                        👦 Kelompok Umur: <span class="text-blue-700">SMP</span> &nbsp; | &nbsp;
-                        🎯 Kesulitan: <span class="text-green-600">Menengah</span> &nbsp; | &nbsp;
-                        📌 Kategori: <span class="text-purple-600">STRUC, DOC</span>
+                        👦 Kelompok Umur: <span class="text-blue-700">{{ $challenge->tingkat }}</span> &nbsp; | &nbsp;
+                        🎯 Kesulitan: <span class="text-green-600">{{ $challenge->kesulitan }}</span> &nbsp; | &nbsp;
+                        📌 Kategori: <span class="text-purple-600">{{ $challenge->kategori_materi }}</span>
                     </p>
 
                     <!-- Narasi -->
-                    <p class="text-justify text-gray-800 leading-relaxed">
-                        Lucia dan teman-temannya terdaftar di sebuah jaringan media sosial, yang digambarkan sebagai
-                        “jaringan” berikut:
-                    </p>
+                    <div class="text-justify text-gray-800 leading-relaxed">
+                        {!! $challenge->deskripsi_soal !!}
+                    </div>
 
                     <!-- Gambar graf -->
-                    <img src="{{ asset('/img/smp_2.png') }}" alt="Graf Pertemanan"
+                    @if ($challenge->gambar_soal_2)
+                    <img src="{{ (strpos($challenge->gambar_soal_2, 'img/') === 0) ? asset($challenge->gambar_soal_2) : asset('storage/' . $challenge->gambar_soal_2) }}" alt="Graf Pertemanan"
                         class="rounded-xl shadow-md w-full md:w-[600px] h-auto mx-auto">
+                    @endif
                 </div>
 
                 <!-- Pertanyaan -->
                 <div class="bg-white p-6 rounded-2xl shadow space-y-4">
-                    <p class="text-gray-800 leading-relaxed">
-                        Sebuah garis berarti pertemanan antara dua orang. Contohnya Monica adalah teman Lucia tetapi Alex
-                        bukan
-                        teman Lucia. Aturan yang berlaku adalah:
-                    </p>
-                    <ul class="list-disc pl-6 text-gray-700 space-y-1">
-                        <li>Jika seseorang berbagi foto dengan temannya, maka temannya itu dapat mengomentarinya.</li>
-                        <li>Jika seseorang memberi komentar pada sebuah foto, maka semua teman-temannya dapat melihat
-                            komentar
-                            dan foto tersebut.</li>
-                    </ul>
-                    <p class="text-gray-800">
-                        Lucia mengunggah sebuah foto. Dengan siapa dia harus berbagi agar Jacob tidak dapat melihatnya?
-                    </p>
+                    <div class="text-gray-800 leading-relaxed">
+                        {!! \App\Models\Setting::getByKey('smp_question_part_2') !!}
+                    </div>
 
                     <!-- Pilihan Jawaban -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-semibold">
-                        <button class="p-3 rounded-lg bg-blue-100 hover:bg-blue-200">A. Dana, Michael, Eve</button>
-                        <button class="p-3 rounded-lg bg-blue-100 hover:bg-blue-200">B. Dana, Eve, Monica</button>
-                        <button class="p-3 rounded-lg bg-blue-100 hover:bg-blue-200">C. Michael, Eve, Jacob</button>
-                        <button class="p-3 rounded-lg bg-blue-100 hover:bg-blue-200">D. Michael, Peter, Monica</button>
+                        @foreach ($challenge->options as $option)
+                        <button class="p-3 rounded-lg bg-blue-100 hover:bg-blue-200">{{ $option->label }}. {{ $option->teks }}</button>
+                        @endforeach
                     </div>
                 </div>
 
@@ -80,55 +72,16 @@
                         💡 Solusi Informatika
                     </h3>
 
-                    <p class="text-gray-800 leading-relaxed">
+                    <div class="text-gray-800 leading-relaxed">
                         <span class="font-semibold text-blue-700">Ini Informatika!</span><br>
-                        Salah satu aspek informatika yang hendak disampaikan melalui soal ini adalah mengenai
-                        <span class="font-semibold text-purple-700">struktur</span>.
-                    </p>
-
-                    <div class="bg-white p-4 rounded-xl shadow space-y-2">
-                        <p class="text-gray-700">
-                            Struktur yang digunakan untuk menggambarkan relasi pertemanan dari Lucia disebut
-                            <span class="font-semibold text-blue-700">graf</span>.
-                        </p>
-                        <ul class="list-disc pl-6 text-gray-700 space-y-1">
-                            <li><span class="font-semibold">Node</span> → menyatakan orang.</li>
-                            <li><span class="font-semibold">Edge (garis)</span> → menyatakan relasi teman.</li>
-                        </ul>
-                        <p class="text-gray-700">
-                            Graf sederhana sering dipakai untuk menggambarkan <span class="italic">jaringan sosial</span>.
-                        </p>
+                        {!! $challenge->solusi !!}
                     </div>
 
-                    <div class="bg-white p-4 rounded-xl shadow space-y-2">
-                        <h4 class="text-lg font-semibold text-green-700">🌐 Pentingnya Privasi</h4>
-                        <p class="text-gray-700 leading-relaxed">
-                            Mengelola akses ke informasi pribadi sangat penting saat ini.
-                            Ketika seseorang mengunggah foto pribadi ke Internet, ia harus berpikir hati-hati tentang siapa
-                            yang mungkin melihat gambar.
-                        </p>
-                        <p class="text-gray-700 leading-relaxed">
-                            Karena sangat sulit untuk benar-benar mengontrol siapa yang bisa melihat gambar, maka
-                            <span class="font-semibold text-red-600">yang terbaik adalah tidak pernah meng-upload gambar ke
-                                internet</span>
-                            kecuali gambar tersebut memang pantas dipajang di ruang publik, misalnya di sekolah atau halte
-                            bus.
-                        </p>
+                    @if ($challenge->ini_informatika)
+                    <div class="text-gray-800 leading-relaxed">
+                        {!! $challenge->ini_informatika !!}
                     </div>
-
-                    <div class="bg-white p-4 rounded-xl shadow space-y-2">
-                        <h4 class="text-lg font-semibold text-indigo-700">⚙️ Analisis Graf dalam Kehidupan Nyata</h4>
-                        <p class="text-gray-700">
-                            Program komputer dapat menganalisis graf untuk berbagai keperluan, contohnya:
-                        </p>
-                        <ul class="list-disc pl-6 text-gray-700 space-y-1">
-                            <li>📊 <span class="font-semibold">Menganalisis jaringan sosial</span> seperti contoh di atas.
-                            </li>
-                            <li>🛰️ <span class="font-semibold">Aplikasi GPS</span> → persimpangan jalan sebagai node, jalan
-                                sebagai edge.</li>
-                            <li>🚗 <span class="font-semibold">Mencari jalur terpendek</span> antara dua tempat.</li>
-                        </ul>
-                    </div>
+                    @endif
                 </div>
 
             </div>

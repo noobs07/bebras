@@ -30,27 +30,19 @@
                         <div
                             class="dropdown-menu absolute left-0 hidden bg-white text-black mt-2 rounded-md shadow-lg w-48 z-50">
                             <ul class="py-2 text-sm">
+                                @foreach (\App\Models\TentangBebras::orderBy('urutan', 'asc')->get() as $tbPage)
                                 <li>
-                                    <a href="{{ route('tentangBebras.dd_1') }}"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_1') ? 'active' : '' }}">
-                                        Apa itu Berpikir Komputasional?
+                                    @php
+                                        $isHardcoded = in_array($tbPage->slug, ['dd_1', 'dd_2', 'dd_3', 'dd_4', 'dd_5', 'dd_6']);
+                                        $routeUrl = $isHardcoded ? route('tentangBebras.' . $tbPage->slug) : route('tentangBebras.show', $tbPage->slug);
+                                        $isActive = request()->is('tentangBebras/' . $tbPage->slug);
+                                    @endphp
+                                    <a href="{{ $routeUrl }}"
+                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ $isActive ? 'active' : '' }}">
+                                        {{ $tbPage->judul }}
                                     </a>
                                 </li>
-                                <li><a href="{{ route('tentangBebras.dd_2') }}"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_2') ? 'active' : '' }}">Apa
-                                        itu Bebras?</a></li>
-                                <li><a href="{{ route('tentangBebras.dd_3') }}"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_3') ? 'active' : '' }}">Tujuan
-                                        Kami</a></li>
-                                <li><a href="{{ route('tentangBebras.dd_4') }}"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_4') ? 'active' : '' }}">Ruang
-                                        Lingkup</a></li>
-                                <li><a href="{{ route('tentangBebras.dd_5') }}"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_5') ? 'active' : '' }}">Kegiatan
-                                        Bebras</a></li>
-                                <li><a href="{{ route('tentangBebras.dd_6') }}"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_6') ? 'active' : '' }}">Sejarah
-                                        Bebras Indonesia</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>

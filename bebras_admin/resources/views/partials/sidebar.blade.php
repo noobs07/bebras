@@ -53,21 +53,28 @@
             </a>
         </li>
 
-        <!-- Layouts -->
-        <li class="menu-item {{ Request::is('layouts*') ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">Kegiatan</div>
+        <!-- Banner -->
+        <li class="menu-item {{ Route::is('banner.*') ? 'active' : '' }}">
+            <a href="{{ route('banner.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-image"></i>
+                <div data-i18n="Banner">Banner (Carousel)</div>
             </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ Request::is('kegiatan/workshop') ? 'active' : '' }}">
-                    <a href="{{ route('workshop.index') }}" class="menu-link">
-                        <div data-i18n="Without menu">Workshop</div>
-                    </a>
-                </li>
+        </li>
 
+        <!-- Kegiatan -->
+        <li class="menu-item {{ Route::is('kegiatan.*') ? 'active' : '' }}">
+            <a href="{{ route('kegiatan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-calendar-event"></i>
+                <div data-i18n="Kegiatan">Kegiatan</div>
+            </a>
+        </li>
 
-            </ul>
+        <!-- Pengaturan -->
+        <li class="menu-item {{ Route::is('setting.*') ? 'active' : '' }}">
+            <a href="{{ route('setting.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div data-i18n="Pengaturan">Pengaturan Situs</div>
+            </a>
         </li>
 
         <!-- Pages -->

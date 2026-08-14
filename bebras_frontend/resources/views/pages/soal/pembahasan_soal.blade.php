@@ -20,102 +20,86 @@
                 <!-- SiKecil -->
                 <div class="bg-white border border-gray-100 rounded-2xl shadow-md hover:shadow-xl transition-all p-6">
                     <div class="flex items-center gap-4 mb-5">
-                        <img src="{{ asset('img/buku2020-sikecil.jpg') }}" alt="SiKecil Logo"
+                        @php
+                            $sikecilBooks = $books->get('sikecil', collect());
+                            $sikecilCover = $sikecilBooks->first()?->cover_image ?? 'img/buku2020-sikecil.jpg';
+                        @endphp
+                        <img src="{{ (strpos($sikecilCover, 'img/') === 0) ? asset($sikecilCover) : asset('storage/' . $sikecilCover) }}" alt="SiKecil Logo"
                             class="w-16 h-16 object-contain rounded-lg bg-blue-50 p-2">
                         <h2 class="text-2xl font-bold text-bebrasBlue">Bebras SiKecil (PAUD/TK)</h2>
                     </div>
                     <ul class="space-y-3 pl-2 text-lg">
+                        @foreach ($sikecilBooks as $book)
                         <li>
                             📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2020-SiKecil-OK-Okt2024.pdf"
+                                href="{{ $book->pdf_link }}"
                                 target="_blank"
                                 class="text-blue-600 font-medium hover:text-blue-800 hover:underline transition">
-                                Buku Bebras SiKecil 2020
+                                {{ $book->judul }}
                             </a>
                         </li>
+                        @endforeach
                     </ul>
                 </div>
 
                 <!-- Siaga -->
                 <div class="bg-white border border-gray-100 rounded-2xl shadow-md hover:shadow-xl transition-all p-6">
                     <div class="flex items-center gap-4 mb-5">
-                        <img src="{{ asset('img/buku2020-sd.jpg') }}" alt="Siaga Logo"
+                        @php
+                            $siagaBooks = $books->get('siaga', collect());
+                            $siagaCover = $siagaBooks->first()?->cover_image ?? 'img/buku2020-sd.jpg';
+                        @endphp
+                        <img src="{{ (strpos($siagaCover, 'img/') === 0) ? asset($siagaCover) : asset('storage/' . $siagaCover) }}" alt="Siaga Logo"
                             class="w-16 h-16 object-contain rounded-lg bg-green-50 p-2">
                         <h2 class="text-2xl font-bold text-bebrasBlue">Bebras Siaga (SD/MI)</h2>
                     </div>
                     <ul class="space-y-3 pl-2 text-lg">
-                        <li>📘 <a href="https://bebras.or.id/v3/wp-content/uploads/2019/10/Bebras-Challenge-2016_Siaga.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Siaga 2016</a></li>
-                        <li>📘 <a href="https://bebras.or.id/v3/wp-content/uploads/2018/07/BukuBebras2017_SD.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Siaga 2017</a></li>
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2019/09/BukuBebras2018%20SD%20v.5%20rev-1.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Siaga 2018</a></li>
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2019-SD-v.Okt_.2024.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Siaga 2019</a></li>
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2020-SD-OK-Okt2024.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Siaga 2020</a></li>
+                        @foreach ($siagaBooks as $book)
+                        <li>📘 <a href="{{ $book->pdf_link }}"
+                                target="_blank" class="text-blue-600 font-medium hover:text-blue-800 hover:underline transition">{{ $book->judul }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
 
                 <!-- Penggalang -->
                 <div class="bg-white border border-gray-100 rounded-2xl shadow-md hover:shadow-xl transition-all p-6">
                     <div class="flex items-center gap-4 mb-5">
-                        <img src="{{ asset('img/buku2020-smp.jpg') }}" alt="Penggalang Logo"
+                        @php
+                            $penggalangBooks = $books->get('penggalang', collect());
+                            $penggalangCover = $penggalangBooks->first()?->cover_image ?? 'img/buku2020-smp.jpg';
+                        @endphp
+                        <img src="{{ (strpos($penggalangCover, 'img/') === 0) ? asset($penggalangCover) : asset('storage/' . $penggalangCover) }}" alt="Penggalang Logo"
                             class="w-16 h-16 object-contain rounded-lg bg-yellow-50 p-2">
                         <h2 class="text-2xl font-bold text-bebrasBlue">Bebras Penggalang (SMP/MTs)</h2>
                     </div>
                     <ul class="space-y-3 pl-2 text-lg">
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2019/10/Bebras-Challenge-2016_Penggalang.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penggalang 2016</a></li>
-                        <li>📘 <a href="https://bebras.or.id/v3/wp-content/uploads/2018/07/BukuBebras2017_SMP.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penggalang 2017</a></li>
-                        <li>📘 <a href="https://bebras.or.id/v3/wp-content/uploads/2019/09/BukuBebras2018%20SMP%20v.5.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penggalang 2018</a></li>
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2019-SMP-v.Okt_.2024.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penggalang 2019</a></li>
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2020-SMP-OK-Okt2024.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penggalang 2020</a></li>
+                        @foreach ($penggalangBooks as $book)
+                        <li>📘 <a href="{{ $book->pdf_link }}"
+                                target="_blank" class="text-blue-600 font-medium hover:text-blue-800 hover:underline transition">{{ $book->judul }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
 
                 <!-- Penegak -->
                 <div class="bg-white border border-gray-100 rounded-2xl shadow-md hover:shadow-xl transition-all p-6">
                     <div class="flex items-center gap-4 mb-5">
-                        <img src="{{ asset('img/buku2020-sma.jpg') }}" alt="Penegak Logo"
+                        @php
+                            $penegakBooks = $books->get('penegak', collect());
+                            $penegakCover = $penegakBooks->first()?->cover_image ?? 'img/buku2020-sma.jpg';
+                        @endphp
+                        <img src="{{ (strpos($penegakCover, 'img/') === 0) ? asset($penegakCover) : asset('storage/' . $penegakCover) }}" alt="Penegak Logo"
                             class="w-16 h-16 object-contain rounded-lg bg-red-50 p-2">
                         <h2 class="text-2xl font-bold text-bebrasBlue">Bebras Penegak (SMA/SMK/MA/MAK)</h2>
                     </div>
                     <ul class="space-y-3 pl-2 text-lg">
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2019/10/Bebras-Challenge-2016_Penegak.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penegak 2016</a></li>
-                        <li>📘 <a href="https://bebras.or.id/v3/wp-content/uploads/2018/07/BukuBebras2017_SMA.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penegak 2017</a></li>
-                        <li>📘 <a href="https://bebras.or.id/v3/wp-content/uploads/2019/09/BukuBebras2018%20SMA%20v.5.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penegak 2018</a></li>
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2019-SMA-v.Okt_.2024.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penegak 2019</a></li>
-                        <li>📘 <a
-                                href="https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2020-SMA-OK-Okt2024.pdf"
-                                target="_blank" class="link-bebras hover:underline hover:text-gray-600">Buku Bebras Penegak 2020</a></li>
+                        @foreach ($penegakBooks as $book)
+                        <li>📘 <a href="{{ $book->pdf_link }}"
+                                target="_blank" class="text-blue-600 font-medium hover:text-blue-800 hover:underline transition">{{ $book->judul }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
 
             </div>
         </div>
     </div>
-
-    {{-- Custom Tailwind for links --}}
-    <style>
-        .link-bebras {
-            @apply text-blue-600 font-medium hover:text-blue-800 hover:underline transition;
-        }
-    </style>
 @endsection

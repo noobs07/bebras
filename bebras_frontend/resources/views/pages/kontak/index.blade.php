@@ -17,44 +17,33 @@
             <!-- Kontak List -->
             <div class="space-y-6">
 
-                <!-- Kontak 1 -->
+                @foreach ($contacts as $contact)
+                @if ($contact->institusi !== '-' && $contact->institusi !== null && $contact->institusi !== '')
+                <!-- Kontak Card with Institution -->
                 <div class="bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition p-6">
-                    <h2 class="text-xl font-bold text-gray-900 mb-2">Dr. Inggriani Liem</h2>
+                    <h2 class="text-xl font-bold text-gray-900 mb-2">{{ $contact->nama }}</h2>
                     <p class="text-gray-700">
-                        STEI Institut Teknologi Bandung <br>
-                        Jl. Ganesha 10, Bandung 40135, Indonesia
+                        {{ $contact->institusi }} <br>
+                        {{ $contact->alamat }}
                     </p>
                 </div>
-
-                <!-- Kontak 2 -->
+                @else
+                <!-- Kontak Card without Institution -->
                 <div class="bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition p-6">
-                    <h2 class="text-xl font-bold text-gray-900 mb-2">Dr. Suryana Setiawan</h2>
-                    <p class="text-gray-700">
-                        Fasilkom Universitas Indonesia <br>
-                        Kampus UI, Depok 16424, Indonesia
-                    </p>
+                    <h2 class="text-xl font-bold text-gray-900">{{ $contact->nama }}</h2>
                 </div>
+                @endif
 
-                <!-- Kontak 3 -->
-                <div class="bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition p-6">
-                    <h2 class="text-xl font-bold text-gray-900">Bebras Biro</h2>
-                </div>
-
-                <!-- Kontak 4 -->
+                @foreach ($contact->details as $detail)
+                <!-- Detail Card -->
                 <div class="bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition p-6 flex items-center gap-3">
-                    <span class="text-bebrasBlue font-semibold">E-mail:</span>
-                    <a href="mailto:mail@bebras.or.id" class="text-blue-600 hover:underline">
-                        mail@bebras.or.id
+                    <span class="text-bebrasBlue font-semibold">{{ $detail->tipe === 'email' ? 'E-mail' : ($detail->tipe === 'url' ? 'URL' : ucfirst($detail->tipe)) }}:</span>
+                    <a href="{{ $detail->tipe === 'email' ? 'mailto:' . $detail->nilai : $detail->nilai }}" {{ $detail->tipe === 'url' ? 'target="_blank"' : '' }} class="text-blue-600 hover:underline">
+                        {{ $detail->nilai }}
                     </a>
                 </div>
-
-                <!-- Kontak 5 -->
-                <div class="bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition p-6 flex items-center gap-3">
-                    <span class="text-bebrasBlue font-semibold">URL:</span>
-                    <a href="http://bebras.or.id" target="_blank" class="text-blue-600 hover:underline">
-                        http://bebras.or.id
-                    </a>
-                </div>
+                @endforeach
+                @endforeach
 
             </div>
         </div>

@@ -113,12 +113,12 @@ class SoalController extends Controller
 
         $validated = $request->validate([
             'parent_id' => 'nullable|exists:menu_soal,id',
-            'nama_menu' => 'nullable|string|max:255',
-            'slug'      => 'nullable|string|max:255|unique:menu_soal,slug,' . $id,
+            'nama_menu' => 'required|string|max:255',
+            'slug'      => 'required|string|max:255|unique:menu_soal,slug,' . $id,
             'judul'     => 'nullable|string|max:255',
             'body'      => 'nullable|string',
-            'gambar'    => 'nullable|image|mimes:jpg,jpeg,png',
-            'urutan'    => 'nullable|integer',
+            'gambar'    => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+            'urutan'    => 'required|integer',
         ]);
 
         DB::beginTransaction();

@@ -33,7 +33,9 @@ class TentangBebrasController extends Controller
             ->addColumn('gambar', function ($row) {
                 if ($row->gambar) {
                     $gambarUrl = Storage::url($row->gambar);
-                    return '<img src="' . $gambarUrl . '" alt="Gambar" width="50" height="50" style="object-fit: cover;" onerror="this.src=\'/assets/img/placeholder.jpg\'">';
+                    return '<img src="' . $gambarUrl . '" alt="Gambar" width="50" height="50"
+                                 style="object-fit:cover;"
+                                 onerror="this.onerror=null;this.replaceWith(document.createTextNode(\'-\'))">';
                 }
                 return '<span class="badge bg-label-secondary">Tidak ada gambar</span>';
             })
@@ -125,11 +127,11 @@ class TentangBebrasController extends Controller
         $data = TentangBebras::findOrFail($id);
 
         $validated = $request->validate([
-            'slug'   => 'nullable|unique:tentang_bebras,slug,' . $id,
-            'judul'  => 'nullable',
-            'konten' => 'nullable',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png',
-            'urutan' => 'nullable|integer',
+            'slug'   => 'required|unique:tentang_bebras,slug,' . $id,
+            'judul'  => 'required|string|max:255',
+            'konten' => 'required|string',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
+            'urutan' => 'required|integer|min:0',
         ]);
 
         DB::beginTransaction();
@@ -180,4 +182,59 @@ class TentangBebrasController extends Controller
         }
     }
 
+    public function storeItemChild(Request $request, $tentang_bebras_id)
+    {
+        $request->validate([
+            'tipe'      => 'required|string',
+            'icon'      => 'nullable|string',
+            'judul'     => 'nullable|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'bg_color'  => 'nullable|string',
+            'urutan'    => 'required|integer',
+        ]);
+
+        \App\Models\TentangBebrasItem::create([
+            'tentang_bebras_id' => $tentang_bebras_id,
+            'tipe'              => $request->tipe,
+            'icon'              => $request->icon,
+            'judul'             => $request->judul,
+            'deskripsi'         => $request->deskripsi,
+            'bg_color'          => $request->bg_color,
+            'urutan'            => $request->urutan,
+        ]);
+
+        return back()->with('success', 'Item pendukung berhasil ditambahkan');
+    }
+
+    public function updateItemChild(Request $request, $id)
+    {
+        $request->validate([
+            'tipe'      => 'required|string',
+            'icon'      => 'nullable|string',
+            'judul'     => 'nullable|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'bg_color'  => 'nullable|string',
+            'urutan'    => 'required|integer',
+        ]);
+
+        $item = \App\Models\TentangBebrasItem::findOrFail($id);
+        $item->update([
+            'tipe'      => $request->tipe,
+            'icon'      => $request->icon,
+            'judul'     => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'bg_color'  => $request->bg_color,
+            'urutan'    => $request->urutan,
+        ]);
+
+        return back()->with('success', 'Item pendukung berhasil diperbarui');
+    }
+
+    public function destroyItemChild($id)
+    {
+        $item = \App\Models\TentangBebrasItem::findOrFail($id);
+        $item->delete();
+
+        return back()->with('success', 'Item pendukung berhasil dihapus');
+    }
 }
