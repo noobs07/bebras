@@ -417,10 +417,19 @@ class CmsContentSeeder extends Seeder
             'institusi' => 'STEI Institut Teknologi Bandung',
             'alamat' => 'Jl. Ganesha 10, Bandung 40135, Indonesia'
         ]);
+        $k1->details()->createMany([
+            ['tipe' => 'email', 'nilai' => 'iliem@stei.itb.ac.id'],
+            ['tipe' => 'url', 'nilai' => 'https://stei.itb.ac.id'],
+        ]);
+
         $k2 = Kontak::create([
             'nama' => 'Dr. Suryana Setiawan',
             'institusi' => 'Fasilkom Universitas Indonesia',
             'alamat' => 'Kampus UI, Depok 16424, Indonesia'
+        ]);
+        $k2->details()->createMany([
+            ['tipe' => 'email', 'nilai' => 'suryana@cs.ui.ac.id'],
+            ['tipe' => 'url', 'nilai' => 'https://cs.ui.ac.id'],
         ]);
         $k3 = Kontak::create([
             'nama' => 'Bebras Biro',
