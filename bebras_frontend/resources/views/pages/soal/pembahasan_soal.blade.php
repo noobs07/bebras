@@ -1,16 +1,28 @@
 @extends('app')
 
-@section('title', 'Pembahasan Soal')
+@section('title', $menu?->judul ?? 'Pembahasan Soal')
 @section('content')
     <div class="w-full px-4 py-10">
         <div class="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl shadow-xl p-8 max-w-7xl mx-auto">
 
             <!-- Header -->
             <div class="border-b pb-6 mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
-                    📚 Pembahasan Soal Bebras
-                </h1>
-                <img src="{{ asset('img/bebras.png') }}" alt="Logo Bebras"
+                <div>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+                        {{ $menu?->judul ?? '📚 Pembahasan Soal Bebras' }}
+                    </h1>
+                    @if($menu?->body)
+                    <div class="mt-3 text-gray-600 text-base leading-relaxed max-w-2xl">
+                        {!! $menu->body !!}
+                    </div>
+                    @endif
+                </div>
+                @php
+                    $logoSrc = $menu?->gambar
+                        ? ((str_starts_with($menu->gambar, 'img/')) ? asset($menu->gambar) : asset('storage/' . $menu->gambar))
+                        : asset('img/bebras.png');
+                @endphp
+                <img src="{{ $logoSrc }}" alt="Logo Bebras"
                     class="w-32 h-24 object-contain rounded-2xl shadow-md hover:scale-105 transition-transform duration-300">
             </div>
 

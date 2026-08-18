@@ -7,6 +7,7 @@ use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LatihanController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SoalBookController;
 use App\Http\Controllers\SoalController;
 use App\Http\Controllers\TentangBebrasController;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,34 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{id}/edit', [SoalController::class, 'edit'])->name('soal_bebras.edit');
         Route::put('/{id}', [SoalController::class, 'update'])->name('soal_bebras.update');
         Route::delete('/{id}', [SoalController::class, 'destroy'])->name('soal_bebras.destroy');
+
+        // Menu Soal Items (konsep & kriteria)
+        Route::get('/{id}/items', [SoalController::class, 'getItems'])->name('soal_bebras.items.get');
+        Route::post('/{id}/items', [SoalController::class, 'storeItem'])->name('soal_bebras.items.store');
+        Route::put('/items/{itemId}', [SoalController::class, 'updateItem'])->name('soal_bebras.items.update');
+        Route::delete('/items/{itemId}', [SoalController::class, 'destroyItem'])->name('soal_bebras.items.destroy');
+
+        // Soal Challenge (nested)
+        Route::get('/{id}/challenge/create', [SoalController::class, 'createChallenge'])->name('soal_bebras.challenge.create');
+        Route::post('/{id}/challenge', [SoalController::class, 'storeChallenge'])->name('soal_bebras.challenge.store');
+        Route::get('/challenge/{cid}/edit', [SoalController::class, 'editChallenge'])->name('soal_bebras.challenge.edit');
+        Route::put('/challenge/{cid}', [SoalController::class, 'updateChallenge'])->name('soal_bebras.challenge.update');
+        Route::delete('/challenge/{cid}', [SoalController::class, 'destroyChallenge'])->name('soal_bebras.challenge.destroy');
+
+        // Challenge Options (A/B/C/D)
+        Route::post('/challenge/{cid}/options', [SoalController::class, 'storeOption'])->name('soal_bebras.option.store');
+        Route::put('/options/{oid}', [SoalController::class, 'updateOption'])->name('soal_bebras.option.update');
+        Route::delete('/options/{oid}', [SoalController::class, 'destroyOption'])->name('soal_bebras.option.destroy');
+    });
+
+    // Sumber Buku Pembahasan Soal
+    Route::prefix('soal-book')->group(function () {
+        Route::get('/', [SoalBookController::class, 'index'])->name('soal_book.index');
+        Route::get('/create', [SoalBookController::class, 'create'])->name('soal_book.create');
+        Route::post('/store', [SoalBookController::class, 'store'])->name('soal_book.store');
+        Route::get('/{id}/edit', [SoalBookController::class, 'edit'])->name('soal_book.edit');
+        Route::put('/{id}', [SoalBookController::class, 'update'])->name('soal_book.update');
+        Route::delete('/{id}', [SoalBookController::class, 'destroy'])->name('soal_book.destroy');
     });
 
     Route::prefix('kontak')->group(function () {

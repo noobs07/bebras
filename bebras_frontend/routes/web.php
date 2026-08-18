@@ -28,6 +28,7 @@ Route::prefix('soal')->name('soal.')->group(function () {
     Route::get('/siaga-sd', [SoalController::class, 'challenge'])->defaults('slug', 'siaga-sd')->name('siaga-sd');
     Route::get('/penggalang-smp', [SoalController::class, 'challenge'])->defaults('slug', 'penggalang-smp')->name('penggalang-smp');
     Route::get('/penegak-sma', [SoalController::class, 'challenge'])->defaults('slug', 'penegak-sma')->name('penegak-sma');
+    Route::get('/{slug}', [SoalController::class, 'show'])->name('show');
 });
 
 use App\Http\Controllers\KegiatanController;

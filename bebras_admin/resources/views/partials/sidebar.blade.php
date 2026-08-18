@@ -33,11 +33,26 @@
                 <div data-i18n="Analytics">Tentang Bebras</div>
             </a>
         </li>
-        <li class="menu-item {{ Route::is('soal_bebras.index') ? 'active' : '' }}">
-            <a href="{{ route('soal_bebras.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-book"></i> 
-                <div data-i18n="Analytics">Soal Bebras</div>
+        @php
+            $isSoalActive = Route::is('soal_bebras.*') || Route::is('soal_book.*') || Route::is('form-soal-bebras');
+        @endphp
+        <li class="menu-item {{ $isSoalActive ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-book"></i>
+                <div data-i18n="Soal Bebras">Soal Bebras</div>
             </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ Route::is('soal_bebras.*') || Route::is('form-soal-bebras') ? 'active' : '' }}">
+                    <a href="{{ route('soal_bebras.index') }}" class="menu-link">
+                        <div data-i18n="Halaman Soal">📄 Halaman Soal</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Route::is('soal_book.*') ? 'active' : '' }}">
+                    <a href="{{ route('soal_book.index') }}" class="menu-link">
+                        <div data-i18n="Sumber Buku">📚 Sumber Buku</div>
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="menu-item {{ Route::is('kontak') ? 'active' : '' }}">
             <a href="{{ route('kontak.index') }}" class="menu-link">

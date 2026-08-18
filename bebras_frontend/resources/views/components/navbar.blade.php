@@ -62,52 +62,64 @@
                         <div
                             class="dropdown-menu absolute left-0 hidden bg-white text-black mt-2 rounded-md shadow-lg w-48 z-50">
                             <ul class="py-2 text-sm">
-                                <li>
-                                    <a href="{{ route('soal.index-soal') }}"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('soal.index-soal') ? 'active' : '' }}">
-                                        Apa itu Soal Bebras?
-                                    </a>
-                                </li>
-                                <li class="relative group">
-                                    <!-- Parent -->
-                                    <div
-                                        class="nav-link  px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer">
-                                        Contoh Soal
-                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
+                                @foreach($menuSoals->whereNull('parent_id') as $menuItem)
+                                    @php
+                                        $children = $menuSoals->where('parent_id', $menuItem->id);
+                                    @endphp
+                                    @if($children->isNotEmpty())
+                                        <li class="relative group">
+                                            <!-- Parent Dropdown Header -->
+                                            <div
+                                                class="nav-link px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer">
+                                                {{ $menuItem->nama_menu }}
+                                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </div>
 
-                                    <!-- Dropdown -->
-                                    <ul
-                                        class="absolute left-full top-0 hidden group-hover:block bg-white shadow-lg rounded-md w-40 ms-2">
+                                            <!-- Sub-Dropdown -->
+                                            <ul
+                                                class="absolute left-[98%] top-0 hidden group-hover:block bg-white shadow-lg rounded-md w-48 ms-0">
+                                                @foreach($children as $child)
+                                                    @php
+                                                        $routeName = 'soal.show';
+                                                        if ($child->slug === 'siaga-sd') $routeName = 'soal.siaga-sd';
+                                                        elseif ($child->slug === 'penggalang-smp') $routeName = 'soal.penggalang-smp';
+                                                        elseif ($child->slug === 'penegak-sma') $routeName = 'soal.penegak-sma';
+                                                        elseif ($child->slug === 'index-soal') $routeName = 'soal.index-soal';
+                                                        elseif ($child->slug === 'pembahasan-soal') $routeName = 'soal.pembahasan-soal';
+                                                        
+                                                        $isChildActive = request()->routeIs('soal.' . $child->slug) || (request()->routeIs('soal.show') && request()->route('slug') === $child->slug);
+                                                    @endphp
+                                                    <li>
+                                                        <a href="{{ $routeName === 'soal.show' ? route('soal.show', $child->slug) : route($routeName) }}"
+                                                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ $isChildActive ? 'active' : '' }}">
+                                                            {{ $child->nama_menu }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
+                                    @else
+                                        @php
+                                            $routeName = 'soal.show';
+                                            if ($menuItem->slug === 'siaga-sd') $routeName = 'soal.siaga-sd';
+                                            elseif ($menuItem->slug === 'penggalang-smp') $routeName = 'soal.penggalang-smp';
+                                            elseif ($menuItem->slug === 'penegak-sma') $routeName = 'soal.penegak-sma';
+                                            elseif ($menuItem->slug === 'index-soal') $routeName = 'soal.index-soal';
+                                            elseif ($menuItem->slug === 'pembahasan-soal') $routeName = 'soal.pembahasan-soal';
+                                            
+                                            $isItemActive = request()->routeIs('soal.' . $menuItem->slug) || (request()->routeIs('soal.show') && request()->route('slug') === $menuItem->slug);
+                                        @endphp
                                         <li>
-                                            <a href="{{ route('soal.siaga-sd') }}"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('soal.siaga-sd') ? 'active' : '' }}">
-                                                Siaga Siswa SD
+                                            <a href="{{ $routeName === 'soal.show' ? route('soal.show', $menuItem->slug) : route($routeName) }}"
+                                                class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ $isItemActive ? 'active' : '' }}">
+                                                {{ $menuItem->nama_menu }}
                                             </a>
                                         </li>
-                                        <li>
-                                            <a href="{{ route('soal.penggalang-smp') }}"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('soal.penggalang-smp') ? 'active' : '' }}">
-                                                Penggalang Siswa SMP
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ route('soal.penegak-sma') }}"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('soal.penegak-sma') ? 'active' : '' }}">
-                                                Penegak Siswa SMA
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="{{ route('soal.pembahasan-soal') }}"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('soal.pembahasan-soal') ? 'active' : '' }}">
-                                        Pembahasan Soal
-                                    </a>
-                                </li>
+                                    @endif
+                                @endforeach
                             </ul>
                         </div>
                     </div>

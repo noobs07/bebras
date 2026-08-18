@@ -57,6 +57,10 @@ class CmsContentSeeder extends Seeder
         Setting::setByKey('home_about_logo', 'img/logo.jpg');
         Setting::setByKey('home_about_content', '<p class="text-gray-600 mb-4 text-justify">Bebras pertama kali digelar di Lithuania (www.bebras.org), merupakan aktivitas ekstra kurikuler yang mengedukasi kemampuan problem solving dalam informatika dengan jumlah peserta terbanyak di dunia. Siswa peserta akan mengikuti kompetisi bebras di bawah supervisi guru, yang dapat mengintegrasikan tantangan tersebut dalam aktivitas mengajar guru. Kompetisi ini dilakukan setiap tahun secara online melalui komputer.</p><p class="text-gray-600 mb-6 text-justify">Yang dilombakan dalam kompetisi adalah sekumpulan soal yang disebut Bebras task. Bebras task disajikan dalam bentuk uraian persoalan yang dilengkapi dengan gambar yang menarik, sehingga siswa dapat lebih mudah memahami soal. Soal-soal tersebut dapat dijawab tanpa perlu belajar informatika terlebih dahulu, tapi soal tersebut sebetulnya terkait pada konsep tertentu dalam informatika dan computational thinking. Bebras task sekaligus menunjukkan aspek informatika dan computational thinking.</p>');
 
+        // Soal page settings (used by FE views)
+        Setting::setByKey('index_soal_footer_text', '<p>Soal-soal Bebras dirancang untuk mendorong siswa berpikir kritis dan kreatif dalam menyelesaikan permasalahan informatika. Bergabunglah dan jadilah bagian dari tantangan berpikir komputasional tingkat nasional!</p>');
+        Setting::setByKey('sma_question_part_2', '<p>Perhatikan kondisi berikut sebelum menjawab pertanyaan di atas. Pilih jawaban yang paling tepat berdasarkan analisis algoritmis yang benar.</p>');
+
         // === 3. Kegiatans (Unified list) ===
         // Home kegiatan cards
         Kegiatan::create([
@@ -266,7 +270,7 @@ class CmsContentSeeder extends Seeder
             'slug' => 'pembahasan-soal',
             'judul' => '📚 Pembahasan Soal Bebras',
             'gambar' => 'img/bebras.png',
-            'urutan' => 2
+            'urutan' => 3
         ]);
         // Seed pembahasan books
         SoalBook::create(['kategori' => 'sikecil', 'judul' => 'Buku Bebras SiKecil 2020', 'pdf_link' => 'https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2020-SiKecil-OK-Okt2024.pdf', 'cover_image' => 'img/buku2020-sikecil.jpg', 'urutan' => 1]);
@@ -289,8 +293,17 @@ class CmsContentSeeder extends Seeder
         SoalBook::create(['kategori' => 'penegak', 'judul' => 'Buku Bebras Penegak 2019', 'pdf_link' => 'https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2019-SMA-v.Okt_.2024.pdf', 'cover_image' => 'img/buku2020-sma.jpg', 'urutan' => 4]);
         SoalBook::create(['kategori' => 'penegak', 'judul' => 'Buku Bebras Penegak 2020', 'pdf_link' => 'https://bebras.or.id/v3/wp-content/uploads/2024/10/Bebras-Indonesia-Book-2020-SMA-OK-Okt2024.pdf', 'cover_image' => 'img/buku2020-sma.jpg', 'urutan' => 5]);
 
+        // contoh-soal parent
+        $contohSoal = MenuSoal::create([
+            'nama_menu' => 'Contoh Soal',
+            'slug' => 'contoh-soal',
+            'judul' => 'Contoh Soal Bebras',
+            'urutan' => 2
+        ]);
+
         // siaga-sd
         $sd = MenuSoal::create([
+            'parent_id' => $contohSoal->id,
             'nama_menu' => 'Siaga Siswa SD',
             'slug' => 'siaga-sd',
             'judul' => 'Contoh Soal SIAGA untuk Siswa SD',
@@ -307,7 +320,7 @@ class CmsContentSeeder extends Seeder
             'gambar_soal_1' => 'img/sd_1.jpg',
             'deskripsi_soal' => 'Berang-berang mempunyai sistem aturan berpakaian yang kompleks untuk menentukan penampilannya, yaitu kombinasi dari pakaian. Manfaatkan gambar yang diberikan untuk menentukan aturan berpakaian yang benar. <span class="font-semibold text-blue-700">Berang-berang yang mana yang tidak berpakaian sesuai aturan?</span>',
             'gambar_soal_2' => 'img/sd_2.png',
-            'solusi' => '<span class="font-semibold text-red-600">Berang-berang kedua (jawaban B)</span> berpakaian tidak sesuai aturan. Dia seharusnya memakai <span class="text-blue-700 font-semibold">topi biru</span> dan bukan topi merah.',
+            'solusi' => '<span class="font-semibold text-red-600">Berang-berang kedua (jawaban B)</span> berpakaian tidak sesuai aturan. Dia seharusnya memakai <span class="text-blue-700 font-semibold">topi biru</span> and bukan topi merah.',
             'ini_informatika' => 'Soal ini adalah contoh penggunaan <span class="font-semibold">pohon keputusan</span> dan <span class="font-semibold">pengenalan pola</span>. Pohon keputusan berbentuk diagram bercabang untuk menggambarkan kemungkinan hasil dari sebuah aturan. Pada setiap simpul, Anda harus memilih cabang yang sesuai untuk mendapatkan hasil yang benar.'
         ]);
         $sdChal->options()->createMany([
@@ -319,6 +332,7 @@ class CmsContentSeeder extends Seeder
 
         // penggalang-smp
         $smp = MenuSoal::create([
+            'parent_id' => $contohSoal->id,
             'nama_menu' => 'Penggalang Siswa SMP',
             'slug' => 'penggalang-smp',
             'judul' => 'Contoh Soal Penggalang untuk Siswa SMP',
@@ -348,6 +362,7 @@ class CmsContentSeeder extends Seeder
 
         // penegak-sma
         $sma = MenuSoal::create([
+            'parent_id' => $contohSoal->id,
             'nama_menu' => 'Penegak Siswa SMA',
             'slug' => 'penegak-sma',
             'judul' => 'Contoh Soal Penegak untuk Siswa SMA',
@@ -364,7 +379,7 @@ class CmsContentSeeder extends Seeder
             'gambar_soal_1' => 'img/sma_1.jpg',
             'deskripsi_soal' => 'Berang-berang mengembangkan suatu “bahasa” untuk melipat kertas. Bahasa ini dapat digunakan untuk menjelaskan bagaimana setiap lembaran kertas dapat dilipat dengan sisi-sisi lurus. Salah satu perintah dalam bahasa ini adalah fold. <p class="mt-4"><span class="font-semibold text-blue-700">e = folda(a,b) artinya</span> anda melipat sisi a selembar kertas agar menempel pada sisi b. Dengan perintah ini, Anda membuat sisi baru, yaitu sebuah garis yang membentuk lipatan, yang dinamakan <span class="font-bold">e</span>. Contoh:</p>',
             'gambar_soal_2' => 'img/sma_2.png',
-            'solusi' => '<span class="font-semibold text-green-600">Jawaban yang benar adalah A.</span><br>Gambar berikut menjelaskan eksekusi pelipatan tahap demi tahap:<br><br><div class="flex justify-center"><img src="img/sma_3.png" alt="Tahap Pelipatan" class="rounded-xl shadow-lg max-w-full sm:max-w-md bg-white p-1 sm:p-2"></div>',
+            'solusi' => '<span class="font-semibold text-green-600">Jawaban yang benar adalah A.</span><br>Gambar berikut menjelaskan eksekusi pelipatan tahap demi tahap:<br><br><div class="flex justify-center"><img src="/img/sma_3.png" alt="Tahap Pelipatan" class="rounded-xl shadow-lg max-w-full sm:max-w-md bg-white p-1 sm:p-2"></div>',
             'ini_informatika' => 'Soal ini berkaitan dengan <span class="font-semibold text-blue-700">informatika</span>, yaitu konsep <span class="italic">fungsi</span> yang sangat penting dalam pemrograman. <ul class="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base mt-4"><li class="flex items-start gap-3 p-3 rounded-lg bg-blue-50 hover:bg-blue-100 transition"><span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-blue-600 text-white text-xs font-bold">1</span><span><span class="font-semibold">Fungsi</span> dipanggil melalui perintah → memulai serangkaian aktivitas.</span></li><li class="flex items-start gap-3 p-3 rounded-lg bg-green-50 hover:bg-green-100 transition"><span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-green-600 text-white text-xs font-bold">2</span><span><span class="font-semibold">Parameter</span> (contoh: dua sisi kertas) → menjadi input fungsi.</span></li><li class="flex items-start gap-3 p-3 rounded-lg bg-purple-50 hover:bg-purple-100 transition"><span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-purple-600 text-white text-xs font-bold">3</span><span><span class="font-semibold">Output</span> → hasil pemrosesan, yaitu bentuk lipatan.</span></li></ul><p class="mt-4">Dengan demikian, siswa belajar bahwa fungsi dalam pemrograman bekerja seperti “mesin”: menerima input, memproses, lalu menghasilkan output.</p>'
         ]);
         $smaChal->options()->createMany([
@@ -391,9 +406,10 @@ class CmsContentSeeder extends Seeder
         // Copy the physical assets to public storage path for latihan so they display via storage/ url
         // We will do this in the script later or directly use public path for seeds to be safe
         // Let's seed actual public folder paths or copy files to storage/latihan/
+        $frontendImgPath = base_path('../bebras_frontend/public/img');
         @mkdir(storage_path('app/public/latihan'), 0777, true);
-        @copy(public_path('img/gdp-logo.png'), storage_path('app/public/latihan/gdp-logo.png'));
-        @copy(public_path('img/logo.jpg'), storage_path('app/public/latihan/logo.jpg'));
+        @copy($frontendImgPath . '/gdp-logo.png', storage_path('app/public/latihan/gdp-logo.png'));
+        @copy($frontendImgPath . '/logo.jpg', storage_path('app/public/latihan/logo.jpg'));
 
         // === 7. Kontak ===
         $k1 = Kontak::create([

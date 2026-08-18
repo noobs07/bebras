@@ -23,6 +23,7 @@
                 {!! $menu->body !!}
 
                 <!-- Daftar Konsep -->
+                @if($menu->items->where('tipe', 'konsep')->isNotEmpty())
                 <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 ml-2">
                     @foreach ($menu->items->where('tipe', 'konsep')->sortBy('urutan') as $item)
                     <li class="flex items-start gap-3 bg-gray-50 rounded-xl px-4 py-3 shadow-sm">
@@ -31,13 +32,14 @@
                     </li>
                     @endforeach
                 </ul>
+                @endif
 
-                <!-- Sub Judul -->
+                <!-- Sub Judul & Daftar Kriteria -->
+                @if($menu->items->where('tipe', 'kriteria')->isNotEmpty())
                 <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mt-10 mb-4">
                     Kriteria Soal Bebras yang Baik
                 </h2>
 
-                <!-- Daftar Kriteria -->
                 <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 ml-2">
                     @foreach ($menu->items->where('tipe', 'kriteria')->sortBy('urutan') as $item)
                     <li class="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3 shadow-sm">
@@ -45,10 +47,13 @@
                     </li>
                     @endforeach
                 </ul>
+                @endif
 
+                @if($menu->slug === 'index-soal')
                 <p>
                     {!! \App\Models\Setting::getByKey('index_soal_footer_text') !!}
                 </p>
+                @endif
             </div>
         </div>
     </div>

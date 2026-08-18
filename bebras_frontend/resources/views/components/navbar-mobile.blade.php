@@ -48,34 +48,60 @@
 
             <div class="dropdown-menu absolute left-0 hidden bg-white text-black mt-2 rounded-md shadow-lg w-56 z-50">
                 <ul class="py-2 text-sm">
-                    <li><a href="{{ route('soal.index-soal') }}" class="block px-4 py-2 hover:bg-gray-100">Apa itu Soal
-                            Bebras?</a></li>
+                    @foreach($menuSoals->whereNull('parent_id') as $menuItem)
+                        @php
+                            $children = $menuSoals->where('parent_id', $menuItem->id);
+                        @endphp
+                        @if($children->isNotEmpty())
+                            <!-- Nested: cukup jadikan LI ini juga .dropdown -->
+                            <li class="relative dropdown">
+                                <button
+                                    class="dropdown-btn w-full flex items-center justify-between px-4 py-2 hover:bg-gray-100"
+                                    aria-expanded="false">
+                                    {{ $menuItem->nama_menu }}
+                                    <svg class="w-4 h-4 ml-1 transform transition duration-200 group-hover:rotate-180"
+                                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
 
-                    <!-- Nested: cukup jadikan LI ini juga .dropdown -->
-                    <li class="relative dropdown">
-                        <button
-                            class="dropdown-btn w-full flex items-center justify-between px-4 py-2 hover:bg-gray-100"
-                            aria-expanded="false">
-                            Contoh Soal
-                            <svg class="w-4 h-4 ml-1 transform transition duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <ul
-                            class="dropdown-menu absolute top-0 left-full ml-1 hidden bg-white shadow-lg rounded-md w-48 z-50">
-                            <li><a href="{{ route('soal.siaga-sd') }}" class="block px-4 py-2 hover:bg-gray-100">Siaga
-                                    Siswa SD</a></li>
-                            <li><a href="{{ route('soal.penggalang-smp') }}"
-                                    class="block px-4 py-2 hover:bg-gray-100">Penggalang Siswa SMP</a></li>
-                            <li><a href="{{ route('soal.penegak-sma') }}"
-                                    class="block px-4 py-2 hover:bg-gray-100">Penegak Siswa SMA</a></li>
-                        </ul>
-                    </li>
-
-                    <li><a href="{{ route('soal.pembahasan-soal') }}"
-                            class="block px-4 py-2 hover:bg-gray-100">Pembahasan Soal</a></li>
+                                <ul
+                                    class="dropdown-menu absolute top-0 left-[98%] ml-0 hidden bg-white shadow-lg rounded-md w-48 z-50">
+                                    @foreach($children as $child)
+                                        @php
+                                            $routeName = 'soal.show';
+                                            if ($child->slug === 'siaga-sd') $routeName = 'soal.siaga-sd';
+                                            elseif ($child->slug === 'penggalang-smp') $routeName = 'soal.penggalang-smp';
+                                            elseif ($child->slug === 'penegak-sma') $routeName = 'soal.penegak-sma';
+                                            elseif ($child->slug === 'index-soal') $routeName = 'soal.index-soal';
+                                            elseif ($child->slug === 'pembahasan-soal') $routeName = 'soal.pembahasan-soal';
+                                        @endphp
+                                        <li>
+                                            <a href="{{ $routeName === 'soal.show' ? route('soal.show', $child->slug) : route($routeName) }}"
+                                               class="block px-4 py-2 hover:bg-gray-100">
+                                                {{ $child->nama_menu }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @else
+                            @php
+                                $routeName = 'soal.show';
+                                if ($menuItem->slug === 'siaga-sd') $routeName = 'soal.siaga-sd';
+                                elseif ($menuItem->slug === 'penggalang-smp') $routeName = 'soal.penggalang-smp';
+                                elseif ($menuItem->slug === 'penegak-sma') $routeName = 'soal.penegak-sma';
+                                elseif ($menuItem->slug === 'index-soal') $routeName = 'soal.index-soal';
+                                elseif ($menuItem->slug === 'pembahasan-soal') $routeName = 'soal.pembahasan-soal';
+                            @endphp
+                            <li>
+                                <a href="{{ $routeName === 'soal.show' ? route('soal.show', $menuItem->slug) : route($routeName) }}"
+                                   class="block px-4 py-2 hover:bg-gray-100">
+                                    {{ $menuItem->nama_menu }}
+                                </a>
+                            </li>
+                        @endif
+                    @endforeach
                 </ul>
             </div>
 
