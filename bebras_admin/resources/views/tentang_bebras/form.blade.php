@@ -126,7 +126,7 @@
                                             Konten
                                             <span class="badge bg-label-warning ms-1" id="konten-warning" style="display:none;">Tidak ditampilkan di Frontend untuk Gaya ini</span>
                                         </label>
-                                        <textarea  name="konten" class="form-control tinymce-editor @error('konten') is-invalid @enderror" rows="6">{{ old('konten', $data->konten ?? '-') }}</textarea>
+                                        <textarea id="konten" name="konten" class="form-control tinymce-editor @error('konten') is-invalid @enderror" rows="6">{{ old('konten', $data->konten ?? '-') }}</textarea>
                                         @error('konten')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -137,7 +137,7 @@
                                             Gambar
                                             <span class="badge bg-label-warning ms-1" id="gambar-warning" style="display:none;">Tidak ditampilkan di Frontend untuk Gaya ini</span>
                                         </label>
-                                        <div class="d-flex align-items-center p-3 border rounded shadow-sm bg-light gap-4">
+                                        <div class="d-flex align-items-center p-3 border rounded shadow-sm bg-light gap-4" id="gambar_container">
 
                                             {{-- Input File --}}
                                             <div class="flex-grow-1">
@@ -361,6 +361,22 @@
                 dd_6: [{value: 'timeline', label: 'Timeline Sejarah'}]
             };
 
+            function setTinyMceReadonly(id, isReadonly) {
+                let editor = tinymce.get(id);
+                if (editor) {
+                    editor.mode.set(isReadonly ? 'readonly' : 'design');
+                    let container = editor.getContainer();
+                    if (container) {
+                        container.style.opacity = isReadonly ? '0.5' : '1';
+                        container.style.pointerEvents = isReadonly ? 'none' : 'auto';
+                    }
+                } else {
+                    setTimeout(function() {
+                        setTinyMceReadonly(id, isReadonly);
+                    }, 100);
+                }
+            }
+
             function updateWarnings(templateValue) {
                 // dd_4: Konten and Gambar are NOT used in Frontend
                 if (templateValue === 'dd_4') {
@@ -376,6 +392,22 @@
                 else {
                     kontenWarning.style.display = 'none';
                     gambarWarning.style.display = 'none';
+                }
+
+                // Toggle Konten TinyMCE input
+                const isKontenDisabled = (templateValue === 'dd_4');
+                setTinyMceReadonly('konten', isKontenDisabled);
+
+                // Toggle Gambar file input
+                const isGambarDisabled = ['dd_4', 'dd_6'].includes(templateValue);
+                const gambarInput = document.getElementById('gambar');
+                const gambarContainer = document.getElementById('gambar_container');
+                if (gambarInput) {
+                    gambarInput.disabled = isGambarDisabled;
+                }
+                if (gambarContainer) {
+                    gambarContainer.style.opacity = isGambarDisabled ? '0.5' : '1';
+                    gambarContainer.style.pointerEvents = isGambarDisabled ? 'none' : 'auto';
                 }
 
                 // Show/hide item manager wrappers based on support

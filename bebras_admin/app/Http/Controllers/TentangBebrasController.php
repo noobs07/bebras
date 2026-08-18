@@ -90,16 +90,24 @@ class TentangBebrasController extends Controller
     {
         $validated = $request->validate([
             'slug'     => 'required|unique:tentang_bebras,slug',
-            'judul'    => 'required',
-            'konten'   => 'required',
-            'gambar'   => 'nullable|image|mimes:jpg,jpeg,png',
+            'judul'    => 'required|string|max:255',
+            'konten'   => $request->template === 'dd_4' ? 'nullable|string' : 'required|string',
+            'gambar'   => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
             'urutan'   => 'required|integer',
             'template' => 'required|in:dd_1,dd_2,dd_3,dd_4,dd_5,dd_6',
         ]);
 
+        if ($request->template === 'dd_4') {
+            $validated['konten'] = '';
+        }
+
+        if (in_array($request->template, ['dd_4', 'dd_6'])) {
+            $validated['gambar'] = null;
+        }
+
         DB::beginTransaction();
         try {
-            if ($request->hasFile('gambar')) {
+            if (!in_array($request->template, ['dd_4', 'dd_6']) && $request->hasFile('gambar')) {
                 $gambarPath          = $request->file('gambar')->store('tentang-bebras', 'public');
                 $validated['gambar'] = $gambarPath;
             }
@@ -130,15 +138,24 @@ class TentangBebrasController extends Controller
         $validated = $request->validate([
             'slug'     => 'required|unique:tentang_bebras,slug,' . $id,
             'judul'    => 'required|string|max:255',
-            'konten'   => 'required|string',
+            'konten'   => $request->template === 'dd_4' ? 'nullable|string' : 'required|string',
             'gambar'   => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
             'urutan'   => 'required|integer|min:0',
             'template' => 'required|in:dd_1,dd_2,dd_3,dd_4,dd_5,dd_6',
         ]);
 
+        if ($request->template === 'dd_4') {
+            $validated['konten'] = '';
+        }
+
         DB::beginTransaction();
         try {
-            if ($request->hasFile('gambar')) {
+            if (in_array($request->template, ['dd_4', 'dd_6'])) {
+                if ($data->gambar && Storage::disk('public')->exists($data->gambar)) {
+                    Storage::disk('public')->delete($data->gambar);
+                }
+                $validated['gambar'] = null;
+            } elseif ($request->hasFile('gambar')) {
                 if ($data->gambar && Storage::disk('public')->exists($data->gambar)) {
                     Storage::disk('public')->delete($data->gambar);
                 }
