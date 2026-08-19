@@ -111,7 +111,7 @@
 
         </div>
 
-        <!-- Dropdown Utama: Tentang Bebras -->
+        <!-- Dropdown Utama: Kegiatan (dengan nested) -->
         <div class="relative dropdown">
             <button
                 class="dropdown-btn nav-link text-white px-3 py-2 rounded-md text-sm font-medium flex items-center hover:bg-bebrasDarkBlue transition"
@@ -125,101 +125,55 @@
 
             <div class="dropdown-menu absolute left-0 hidden bg-white text-black mt-2 rounded-md shadow-lg w-56 z-50">
                 <ul class="py-2 text-sm">
+                    @foreach($menuKegiatans as $menuItem)
+                        @php $children = $menuItem->children; @endphp
+                        @if($children->isNotEmpty())
+                            <!-- Nested -->
+                            <li class="relative dropdown">
+                                <button
+                                    class="dropdown-btn w-full flex items-center justify-between px-4 py-2 hover:bg-gray-100"
+                                    aria-expanded="false">
+                                    {{ $menuItem->nama_menu }}
+                                    <svg class="w-4 h-4 ml-1 transform transition duration-200 group-hover:rotate-180"
+                                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
 
-
-                    <!-- Nested: cukup jadikan LI ini juga .dropdown -->
-                    <li class="relative dropdown">
-                        <button
-                            class="dropdown-btn w-full flex items-center justify-between px-4 py-2 hover:bg-gray-100"
-                            aria-expanded="false">
-                            Workshop
-                            <svg class="w-4 h-4 ml-1 transform transition duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <ul
-                            class="dropdown-menu absolute top-0 left-full ml-1 hidden bg-white shadow-lg rounded-md w-48 z-50">
-                            <li><a href="{{ route('kegiatan.workshop-2017') }}" class="block px-4 py-2 hover:bg-gray-100">
-                                    2017</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2016</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="relative dropdown">
-                        <button
-                            class="dropdown-btn w-full flex items-center justify-between px-4 py-2 hover:bg-gray-100"
-                            aria-expanded="false">
-                            Bebras Challenge
-                            <svg class="w-4 h-4 ml-1 transform transition duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <ul
-                            class="dropdown-menu absolute top-0 left-full ml-1 hidden bg-white shadow-lg rounded-md w-48 z-50">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    BC 2017</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    BC 2016</a></li>
-                        </ul>
-                    </li>
-
-                    <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Statistik Bebras Challenge</a>
-                    </li>
-
-                    <li class="relative dropdown">
-                        <button
-                            class="dropdown-btn w-full flex items-center justify-between px-4 py-2 hover:bg-gray-100"
-                            aria-expanded="false">
-                            Pengumuman Hasil
-                            <svg class="w-4 h-4 ml-1 transform transition duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <ul
-                            class="dropdown-menu absolute top-0 left-full ml-1 hidden bg-white shadow-lg rounded-md w-48 z-50">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2024</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2023</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2022</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2021</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="relative dropdown">
-                        <button
-                            class="dropdown-btn w-full flex items-center justify-between px-4 py-2 hover:bg-gray-100"
-                            aria-expanded="false">
-                            CT Challenge 2023 for Teachers
-                            <svg class="w-4 h-4 ml-1 transform transition duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <ul
-                            class="dropdown-menu absolute top-0 left-full ml-1 hidden bg-white shadow-lg rounded-md w-48 z-50">
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2024</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2023</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2022</a></li>
-                            <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">
-                                    2021</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="https://pandai.bebras.or.id/" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Gerakan Pandai</a>
-                    </li>
+                                <ul class="dropdown-menu absolute top-0 left-[98%] ml-0 hidden bg-white shadow-lg rounded-md w-48 z-50">
+                                    @foreach($children as $child)
+                                        <li>
+                                            @if($child->url)
+                                                <a href="{{ $child->url }}" target="_blank"
+                                                   class="block px-4 py-2 hover:bg-gray-100">
+                                                    {{ $child->nama_menu }}
+                                                </a>
+                                            @else
+                                                <a href="{{ route('kegiatan.show', $child->slug) }}"
+                                                   class="block px-4 py-2 hover:bg-gray-100">
+                                                    {{ $child->nama_menu }}
+                                                </a>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @else
+                            <li>
+                                @if($menuItem->url)
+                                    <a href="{{ $menuItem->url }}" target="_blank"
+                                       class="block px-4 py-2 hover:bg-gray-100">
+                                        {{ $menuItem->nama_menu }}
+                                    </a>
+                                @else
+                                    <a href="{{ route('kegiatan.show', $menuItem->slug) }}"
+                                       class="block px-4 py-2 hover:bg-gray-100">
+                                        {{ $menuItem->nama_menu }}
+                                    </a>
+                                @endif
+                            </li>
+                        @endif
+                    @endforeach
                 </ul>
             </div>
         </div>

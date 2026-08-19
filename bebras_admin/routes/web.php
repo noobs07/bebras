@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\MenuKegiatanController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LatihanController;
 use App\Http\Controllers\RegisterController;
@@ -119,7 +120,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{id}', [BannerController::class, 'destroy'])->name('banner.destroy');
     });
 
-    // Kegiatan (Utama + Workshop 2017)
+    // Menu Kegiatan (Hierarki Navbar)
+    Route::prefix('menu-kegiatan')->group(function () {
+        Route::get('/', [MenuKegiatanController::class, 'index'])->name('menu_kegiatan.index');
+        Route::get('/create', [MenuKegiatanController::class, 'create'])->name('menu_kegiatan.create');
+        Route::post('/store', [MenuKegiatanController::class, 'store'])->name('menu_kegiatan.store');
+        Route::get('/{id}/edit', [MenuKegiatanController::class, 'edit'])->name('menu_kegiatan.edit');
+        Route::put('/{id}', [MenuKegiatanController::class, 'update'])->name('menu_kegiatan.update');
+        Route::delete('/{id}', [MenuKegiatanController::class, 'destroy'])->name('menu_kegiatan.destroy');
+    });
+
+    // Kegiatan (item kartu per menu)
     Route::prefix('kegiatan')->group(function () {
         Route::get('/', [KegiatanController::class, 'index'])->name('kegiatan.index');
         Route::get('/list', [KegiatanController::class, 'list'])->name('kegiatan.list');

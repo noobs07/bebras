@@ -7,7 +7,6 @@
 
         <div class="row">
             <div class="col-md-12">
-
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <strong>Sukses!</strong> {{ session('success') }}
@@ -23,26 +22,29 @@
 
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Daftar Kegiatan</h5>
-                        <a href="{{ route('kegiatan.create') }}" class="btn btn-primary btn-sm">
-                            <i class="bx bx-plus me-1"></i> Tambah Kegiatan
+                        <h5 class="mb-0">Tabel Menu Kegiatan</h5>
+                        <a href="{{ route('menu_kegiatan.create') }}" class="btn btn-primary btn-sm">
+                            <i class="bx bx-plus me-1"></i> Tambah Menu
                         </a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="table-kegiatan" class="table table-striped table-borderless border-bottom">
+                            <table id="table-menu-kegiatan"
+                                   class="table table-striped table-borderless border-bottom">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Gambar</th>
-                                        <th>Menu Kegiatan</th>
-                                        <th>Judul</th>
-                                        <th>Kota</th>
+                                        <th>No</th>
+                                        <th>Nama Menu</th>
+                                        <th>Slug</th>
+                                        <th>Parent</th>
+                                        <th>Judul Konten</th>
                                         <th>Urutan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <!-- Data via AJAX -->
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -57,25 +59,22 @@
 
 @push('js')
 <script>
-$(document).ready(function() {
-    $('#table-kegiatan').DataTable({
+$(function () {
+    $('#table-menu-kegiatan').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('kegiatan.list') }}",
+        ajax: "{{ route('menu_kegiatan.index') }}",
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'gambar', name: 'gambar', orderable: false, searchable: false },
-            { data: 'menu_nama', name: 'menu_nama', orderable: false, searchable: false },
+            { data: 'nama_menu', name: 'nama_menu' },
+            { data: 'slug', name: 'slug' },
+            { data: 'parent', name: 'parent', orderable: false, searchable: false },
             { data: 'judul', name: 'judul' },
-            { data: 'kota', name: 'kota' },
             { data: 'urutan', name: 'urutan' },
             { data: 'actions', name: 'actions', orderable: false, searchable: false },
         ],
-        order: [[5, 'asc']],
-        language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json' }
+        order: [[5, 'asc']]
     });
-
-    setTimeout(function() { $('.alert').alert('close'); }, 4000);
 });
 </script>
 @endpush

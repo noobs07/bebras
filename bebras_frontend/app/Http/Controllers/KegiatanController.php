@@ -2,14 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kegiatan;
+use App\Models\MenuKegiatan;
 use Illuminate\Http\Request;
 
 class KegiatanController extends Controller
 {
-    public function workshop2017()
+    /**
+     * Dynamic page: /kegiatan/{slug}
+     * Loads the MenuKegiatan entry by slug and its related kegiatan cards.
+     */
+    public function show(string $slug)
     {
-        $workshops = Kegiatan::where('tipe', 'workshop_2017')->orderBy('urutan', 'asc')->get();
-        return view('pages.kegiatan.workshop_2017', compact('workshops'));
+        $menu = MenuKegiatan::with('kegiatans')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // If this menu has an external URL, redirect to it
+        if ($menu->url) {
+            return redirect()->away($menu->url);
+        }
+
+        return view('pages.kegiatan.show', compact('menu'));
     }
 }

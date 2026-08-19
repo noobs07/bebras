@@ -80,7 +80,15 @@
         <li class="menu-item {{ Route::is('kegiatan.*') ? 'active' : '' }}">
             <a href="{{ route('kegiatan.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-calendar-event"></i>
-                <div data-i18n="Kegiatan">Kegiatan</div>
+                <div data-i18n="Kegiatan">Kegiatan (Kartu)</div>
+            </a>
+        </li>
+
+        <!-- Menu Kegiatan -->
+        <li class="menu-item {{ Route::is('menu_kegiatan.*') ? 'active' : '' }}">
+            <a href="{{ route('menu_kegiatan.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-menu"></i>
+                <div data-i18n="Menu Kegiatan">Menu Kegiatan (Navbar)</div>
             </a>
         </li>
 

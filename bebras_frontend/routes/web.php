@@ -34,7 +34,7 @@ Route::prefix('soal')->name('soal.')->group(function () {
 use App\Http\Controllers\KegiatanController;
 
 Route::prefix('kegiatan')->name('kegiatan.')->group(function () {
-    Route::get('/workshop-2017', [KegiatanController::class, 'workshop2017'])->name('workshop-2017');
+    Route::get('/{slug}', [KegiatanController::class, 'show'])->name('show');
 });
 
 Route::get('/latihan', function () {

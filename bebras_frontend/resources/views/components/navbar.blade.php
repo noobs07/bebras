@@ -139,147 +139,67 @@
                         <div
                             class="dropdown-menu absolute left-0 hidden bg-white text-black mt-2 rounded-md shadow-lg w-60 z-50">
                             <ul class="py-2 text-sm">
-                                <li class="relative group">
-                                    <!-- Parent -->
-                                    <div
-                                        class="nav-link  px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer">
-                                        Workshop
-                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
+                                @foreach($menuKegiatans as $menuItem)
+                                    @php
+                                        $children = $menuItem->children;
+                                        $isActive = request()->is('kegiatan/' . $menuItem->slug)
+                                            || ($children->isNotEmpty() && $children->contains(fn($c) => request()->is('kegiatan/' . $c->slug)));
+                                    @endphp
 
-                                    <!-- Dropdown -->
-                                    <ul
-                                        class="absolute left-full top-0 hidden group-hover:block bg-white shadow-lg rounded-md w-40 ms-2">
-                                        <li>
-                                            <a href="{{ route('kegiatan.workshop-2017') }}"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('kegiatan.workshop-2017') ? 'active' : '' }}">
-                                                2017
-                                            </a>
+                                    @if($children->isNotEmpty())
+                                        <li class="relative group">
+                                            <!-- Has children: show arrow -->
+                                            <div class="nav-link px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer {{ $isActive ? 'active' : '' }}">
+                                                {{ $menuItem->nama_menu }}
+                                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            </div>
+
+                                            <!-- Sub-Dropdown -->
+                                            <ul class="absolute left-[98%] top-0 hidden group-hover:block bg-white shadow-lg rounded-md w-48 ms-0">
+                                                @foreach($children as $child)
+                                                    @php
+                                                        $isChildActive = request()->is('kegiatan/' . $child->slug);
+                                                    @endphp
+                                                    <li>
+                                                        @if($child->url)
+                                                            <a href="{{ $child->url }}" target="_blank"
+                                                               class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                                                {{ $child->nama_menu }}
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ route('kegiatan.show', $child->slug) }}"
+                                                               class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ $isChildActive ? 'active' : '' }}">
+                                                                {{ $child->nama_menu }}
+                                                            </a>
+                                                        @endif
+                                                    </li>
+                                                @endforeach
+                                            </ul>
                                         </li>
+                                    @else
                                         <li>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('#') ? 'active' : '' }}">
-                                                2016
-                                            </a>
+                                            @if($menuItem->url)
+                                                <a href="{{ $menuItem->url }}" target="_blank"
+                                                   class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                                    {{ $menuItem->nama_menu }}
+                                                </a>
+                                            @else
+                                                <a href="{{ route('kegiatan.show', $menuItem->slug) }}"
+                                                   class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ $isActive ? 'active' : '' }}">
+                                                    {{ $menuItem->nama_menu }}
+                                                </a>
+                                            @endif
                                         </li>
-
-                                    </ul>
-                                </li>
-
-                                <li class="relative group">
-                                    <!-- Parent -->
-                                    <div
-                                        class="nav-link  px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer">
-                                        Bebras Challenge
-                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-
-                                    <!-- Dropdown -->
-                                    <ul
-                                        class="absolute left-full top-0 hidden group-hover:block bg-white shadow-lg rounded-md w-40 ms-2">
-                                        <li>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('#') ? 'active' : '' }}">
-                                                2024
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('#') ? 'active' : '' }}">
-                                                2023
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('#') ? 'active' : '' }}">
-                                                2022
-                                            </a>
-                                        </li>
-
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 ">
-                                        Statistik Bebras Indonesia Challenge
-                                    </a>
-                                </li>
-
-                                <li class="relative group">
-                                    <!-- Parent -->
-                                    <div
-                                        class="nav-link  px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer">
-                                        Pengumuman Hasil
-                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor"
-                                            stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-
-                                    <!-- Dropdown -->
-                                    <ul
-                                        class="absolute left-full top-0 hidden group-hover:block bg-white shadow-lg rounded-md w-40 ms-2">
-                                        <li>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('#') ? 'active' : '' }}">
-                                                2024
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('#') ? 'active' : '' }}">
-                                                2023
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('#') ? 'active' : '' }}">
-                                                2022
-                                            </a>
-                                        </li>
-
-                                    </ul>
-                                </li>
-
-                                <li class="relative group">
-                                    <!-- Parent -->
-                                    <div
-                                        class="nav-link  px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer">
-                                        CT Challenge 2023 For Teachers
-                                        <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor"
-                                            stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-
-                                    <!-- Dropdown -->
-                                    <ul
-                                        class="absolute left-full top-0 hidden group-hover:block bg-white shadow-lg rounded-md w-40 ms-2">
-                                        <li>
-                                            <a href="#"
-                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('#') ? 'active' : '' }}">
-                                                Pengumuman Hasil
-                                            </a>
-                                        </li>
-
-
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="https://pandai.bebras.or.id/" target="_blank"
-                                        class="nav-link block px-4 py-2 text-gray-800 hover:bg-gray-100 ">
-                                        Gerakan Pandai
-                                    </a>
-                                </li>
+                                    @endif
+                                @endforeach
                             </ul>
                         </div>
                     </div>
+
+
 
                     <a href="{{ route('latihan') }}"
                         class="nav-link text-white px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('latihan') ? 'active' : '' }}">

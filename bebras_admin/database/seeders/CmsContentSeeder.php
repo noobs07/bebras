@@ -16,6 +16,7 @@ use App\Models\SoalChallengeOption;
 use App\Models\Latihan;
 use App\Models\Kontak;
 use App\Models\KontakDetail;
+use App\Models\MenuKegiatan;
 
 class CmsContentSeeder extends Seeder
 {
@@ -62,86 +63,43 @@ class CmsContentSeeder extends Seeder
         Setting::setByKey('sma_question_part_2', '<p>Perhatikan kondisi berikut sebelum menjawab pertanyaan di atas. Pilih jawaban yang paling tepat berdasarkan analisis algoritmis yang benar.</p>');
 
         // === 3. Kegiatans (Unified list) ===
-        // Home kegiatan cards
+        // NOTE: menu_kegiatan_id will be filled after MenuKegiatan records are created (section 8).
+        // Here we seed the "kegiatan_utama" with null menu_kegiatan_id (beranda only).
         Kegiatan::create([
-            'tipe' => 'kegiatan_utama',
-            'judul' => 'Lokakarya Nasional',
+            'tipe'    => 'kegiatan_utama',
+            'judul'   => 'Lokakarya Nasional',
             'deskripsi' => 'Berlangsung sekali setahun untuk koordinasi komite nasional (NBO Bebras Indonesia) dengan mitra (Bebras Biro), dan menetapkan soal-soal nasional.',
-            'gambar' => 'img/Lokakarya Nasional.jpeg',
-            'urutan' => 1
+            'gambar'  => 'img/Lokakarya Nasional.jpeg',
+            'urutan'  => 1
         ]);
         Kegiatan::create([
-            'tipe' => 'kegiatan_utama',
-            'judul' => 'Lokakarya untuk Guru',
+            'tipe'    => 'kegiatan_utama',
+            'judul'   => 'Lokakarya untuk Guru',
             'deskripsi' => 'Workshop/lokakarya dilaksanakan oleh Bebras Biro untuk memberi bekal kepada guru agar para guru mampu memperkenalkan konsep berpikir komputasi.',
-            'gambar' => 'img/Lokakarya untuk Guru.jpeg',
-            'urutan' => 2
+            'gambar'  => 'img/Lokakarya untuk Guru.jpeg',
+            'urutan'  => 2
         ]);
         Kegiatan::create([
-            'tipe' => 'kegiatan_utama',
-            'judul' => 'Tantangan Berpikir Komputasional Bebras',
+            'tipe'    => 'kegiatan_utama',
+            'judul'   => 'Tantangan Berpikir Komputasional Bebras',
             'deskripsi' => 'Diselenggarakan sesuai jadwal yang ditetapkan komite internasional, biasanya minggu kedua atau ketiga November (disebut Bebras Week).',
-            'gambar' => 'img/Tantangan Berpikir.jpeg',
-            'urutan' => 3
+            'gambar'  => 'img/Tantangan Berpikir.jpeg',
+            'urutan'  => 3
         ]);
 
-        // Workshop 2017 cards
-        Kegiatan::create([
-            'tipe' => 'workshop_2017',
-            'judul' => 'Institut Pertanian Bogor, 25 Oktober 2017',
-            'deskripsi' => '"Workshop Computational Thinking and Bebras Challenge 2017" <br><span class="font-semibold">NBO Bebras Indonesia, Julio Adisantoso</span>',
-            'gambar' => 'img/workshop_a1.jpeg',
-            'kota' => 'Bogor',
-            'urutan' => 1
-        ]);
-        Kegiatan::create([
-            'tipe' => 'workshop_2017',
-            'judul' => 'Universitas Dian Nuswantoro, 12 Oktober 2017',
-            'deskripsi' => 'Workshop Computational Thinking Guru-guru Semarang <br><span class="font-semibold">Dr. Inggriani</span>',
-            'gambar' => 'img/workshop_a2.jpg',
-            'kota' => 'Semarang',
-            'urutan' => 2
-        ]);
-        Kegiatan::create([
-            'tipe' => 'workshop_2017',
-            'judul' => 'Institut Teknologi Sumatera, 23 September 2017',
-            'deskripsi' => 'Workshop Computational Thinking Initiative <br><span class="font-semibold">Dr. Inggriani</span>',
-            'gambar' => 'img/workshop_a3.jpg',
-            'kota' => 'Lampung',
-            'urutan' => 3
-        ]);
-        Kegiatan::create([
-            'tipe' => 'workshop_2017',
-            'judul' => 'Universitas Kristen Maranatha, 22 September 2017',
-            'deskripsi' => 'Bebras Indonesia CT Challenge, Teacher Workshop <br><span class="font-semibold">Dr. Inggriani</span>',
-            'gambar' => 'img/workshop_a4.jpg',
-            'kota' => 'Bandung',
-            'urutan' => 4
-        ]);
-        Kegiatan::create([
-            'tipe' => 'workshop_2017',
-            'judul' => 'Universitas Lambung Mangkurat, 18 Juli 2017',
-            'deskripsi' => 'Workshop Bebras CT & Competitive Programming <br><span class="font-semibold">Dr. Inggriani</span>',
-            'gambar' => 'img/workshop_a5.jpg',
-            'kota' => 'Samarinda',
-            'urutan' => 5
-        ]);
-        Kegiatan::create([
-            'tipe' => 'workshop_2017',
-            'judul' => 'Universitas Udayana, 13 Juli 2017',
-            'deskripsi' => 'Kuliah Tamu Computational Thinking <br><span class="font-semibold">Prof. Dr. Valentina Dagiene</span>',
-            'gambar' => 'img/workshop_a6.jpg',
-            'kota' => 'Bali',
-            'urutan' => 6
-        ]);
-        Kegiatan::create([
-            'tipe' => 'workshop_2017',
-            'judul' => 'Politeknik Caltex Riau, 6 Juli 2017',
-            'deskripsi' => 'Professor & Expert visit series 2017: Bebras CT <br><span class="font-semibold">Prof. Dr. Valentina Dagiene</span>',
-            'gambar' => 'img/workshop_a7.jpg',
-            'kota' => 'Pekanbaru',
-            'urutan' => 7
-        ]);
+        // Workshop 2017 cards — menu_kegiatan_id will be set in section 8 after MenuKegiatan seeding
+        $w2017Items = [
+            ['judul' => 'Institut Pertanian Bogor, 25 Oktober 2017',        'deskripsi' => '"Workshop Computational Thinking and Bebras Challenge 2017" <br><span class="font-semibold">NBO Bebras Indonesia, Julio Adisantoso</span>',  'gambar' => 'img/workshop_a1.jpeg', 'kota' => 'Bogor',     'urutan' => 1],
+            ['judul' => 'Universitas Dian Nuswantoro, 12 Oktober 2017',     'deskripsi' => 'Workshop Computational Thinking Guru-guru Semarang <br><span class="font-semibold">Dr. Inggriani</span>',                                    'gambar' => 'img/workshop_a2.jpg',  'kota' => 'Semarang',  'urutan' => 2],
+            ['judul' => 'Institut Teknologi Sumatera, 23 September 2017',   'deskripsi' => 'Workshop Computational Thinking Initiative <br><span class="font-semibold">Dr. Inggriani</span>',                                               'gambar' => 'img/workshop_a3.jpg',  'kota' => 'Lampung',   'urutan' => 3],
+            ['judul' => 'Universitas Kristen Maranatha, 22 September 2017', 'deskripsi' => 'Bebras Indonesia CT Challenge, Teacher Workshop <br><span class="font-semibold">Dr. Inggriani</span>',                                          'gambar' => 'img/workshop_a4.jpg',  'kota' => 'Bandung',   'urutan' => 4],
+            ['judul' => 'Universitas Lambung Mangkurat, 18 Juli 2017',      'deskripsi' => 'Workshop Bebras CT & Competitive Programming <br><span class="font-semibold">Dr. Inggriani</span>',                                             'gambar' => 'img/workshop_a5.jpg',  'kota' => 'Samarinda', 'urutan' => 5],
+            ['judul' => 'Universitas Udayana, 13 Juli 2017',                'deskripsi' => 'Kuliah Tamu Computational Thinking <br><span class="font-semibold">Prof. Dr. Valentina Dagiene</span>',                                         'gambar' => 'img/workshop_a6.jpg',  'kota' => 'Bali',      'urutan' => 6],
+            ['judul' => 'Politeknik Caltex Riau, 6 Juli 2017',              'deskripsi' => 'Professor & Expert visit series 2017: Bebras CT <br><span class="font-semibold">Prof. Dr. Valentina Dagiene</span>',                            'gambar' => 'img/workshop_a7.jpg',  'kota' => 'Pekanbaru', 'urutan' => 7],
+        ];
+        foreach ($w2017Items as $item) {
+            Kegiatan::create(array_merge($item, ['tipe' => 'workshop_2017']));
+        }
 
         // === 4. Tentang Bebras Pages ===
         // dd_1
@@ -441,5 +399,128 @@ class CmsContentSeeder extends Seeder
             ['tipe' => 'email', 'nilai' => 'mail@bebras.or.id'],
             ['tipe' => 'url', 'nilai' => 'http://bebras.or.id'],
         ]);
+
+        // === 8. Menu Kegiatan (Hierarchical Dropdown) ===
+        $m1 = MenuKegiatan::create([
+            'nama_menu' => 'Workshop',
+            'slug' => 'workshop',
+            'judul' => 'Workshop Bebras Indonesia',
+            'urutan' => 1
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m1->id,
+            'nama_menu' => '2017',
+            'slug' => 'workshop-2017',
+            'judul' => 'Workshop 2017',
+            'body' => '<p>Kegiatan Workshop Bebras 2017 diselenggarakan di berbagai kota di Indonesia untuk melatih guru-guru memperkenalkan konsep berpikir komputasi.</p>',
+            'urutan' => 1
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m1->id,
+            'nama_menu' => '2016',
+            'slug' => 'workshop-2016',
+            'judul' => 'Workshop 2016',
+            'body' => '<p>Awal mula inisiasi sosialisasi bebras dan lokakarya computational thinking pada tahun 2016.</p>',
+            'urutan' => 2
+        ]);
+
+        $m2 = MenuKegiatan::create([
+            'nama_menu' => 'Bebras Challenge',
+            'slug' => 'bebras-challenge',
+            'judul' => 'Tantangan Bebras Indonesia',
+            'urutan' => 2
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m2->id,
+            'nama_menu' => '2024',
+            'slug' => 'challenge-2024',
+            'judul' => 'Bebras Challenge 2024',
+            'body' => '<p>Informasi pelaksanaan dan panduan Bebras Indonesia Challenge 2024.</p>',
+            'urutan' => 1
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m2->id,
+            'nama_menu' => '2023',
+            'slug' => 'challenge-2023',
+            'judul' => 'Bebras Challenge 2023',
+            'body' => '<p>Dokumentasi tantangan Bebras Indonesia Challenge 2023.</p>',
+            'urutan' => 2
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m2->id,
+            'nama_menu' => '2022',
+            'slug' => 'challenge-2022',
+            'judul' => 'Bebras Challenge 2022',
+            'body' => '<p>Dokumentasi tantangan Bebras Indonesia Challenge 2022.</p>',
+            'urutan' => 3
+        ]);
+
+        MenuKegiatan::create([
+            'nama_menu' => 'Statistik Bebras Indonesia Challenge',
+            'slug' => 'statistik-bebras-indonesia-challenge',
+            'judul' => 'Statistik Bebras Indonesia Challenge',
+            'body' => '<p>Berikut statistik sebaran peserta dan sekolah yang berpartisipasi dalam Bebras Challenge nasional.</p>',
+            'urutan' => 3
+        ]);
+
+        $m4 = MenuKegiatan::create([
+            'nama_menu' => 'Pengumuman Hasil',
+            'slug' => 'pengumuman-hasil',
+            'judul' => 'Pengumuman Hasil',
+            'urutan' => 4
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m4->id,
+            'nama_menu' => '2024',
+            'slug' => 'pengumuman-2024',
+            'judul' => 'Pengumuman Hasil 2024',
+            'body' => '<p>Daftar pemenang dan statistik perolehan skor peserta Bebras Challenge 2024.</p>',
+            'urutan' => 1
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m4->id,
+            'nama_menu' => '2023',
+            'slug' => 'pengumuman-2023',
+            'judul' => 'Pengumuman Hasil 2023',
+            'body' => '<p>Daftar pemenang dan statistik perolehan skor peserta Bebras Challenge 2023.</p>',
+            'urutan' => 2
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m4->id,
+            'nama_menu' => '2022',
+            'slug' => 'pengumuman-2022',
+            'judul' => 'Pengumuman Hasil 2022',
+            'body' => '<p>Daftar pemenang dan statistik perolehan skor peserta Bebras Challenge 2022.</p>',
+            'urutan' => 3
+        ]);
+
+        $m5 = MenuKegiatan::create([
+            'nama_menu' => 'CT Challenge 2023 For Teachers',
+            'slug' => 'ct-challenge-2023-for-teachers',
+            'judul' => 'CT Challenge 2023 For Teachers',
+            'urutan' => 5
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m5->id,
+            'nama_menu' => 'Pengumuman Hasil',
+            'slug' => 'ct-challenge-pengumuman',
+            'judul' => 'Pengumuman Hasil CT Challenge 2023 For Teachers',
+            'body' => '<p>Daftar pemenang penghargaan nasional CT Challenge 2023 kategori Guru.</p>',
+            'urutan' => 1
+        ]);
+
+        MenuKegiatan::create([
+            'nama_menu' => 'Gerakan Pandai',
+            'slug'      => 'gerakan-pandai',
+            'url'       => 'https://pandai.bebras.or.id/',
+            'urutan'    => 6
+        ]);
+
+        // Link existing workshop_2017 kegiatans to menu_kegiatan slug='workshop-2017'
+        $menuWorkshop2017 = MenuKegiatan::where('slug', 'workshop-2017')->first();
+        if ($menuWorkshop2017) {
+            Kegiatan::where('tipe', 'workshop_2017')
+                ->update(['menu_kegiatan_id' => $menuWorkshop2017->id]);
+        }
     }
 }

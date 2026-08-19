@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\MenuKegiatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -10,7 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class KegiatanController extends Controller
 {
-    private function breadCrumbs($currentLabel, $currentUrl = null)
+    private function breadCrumbs($currentLabel, $currentUrl = null): array
     {
         return [
             ['label' => 'Home', 'route' => 'admin.dashboard'],
@@ -28,9 +29,10 @@ class KegiatanController extends Controller
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $kegiatan = Kegiatan::orderBy('tipe')->orderBy('urutan');
+            $kegiatan = Kegiatan::with('menuKegiatan')->orderBy('menu_kegiatan_id')->orderBy('urutan');
             return DataTables::of($kegiatan)
                 ->addIndexColumn()
+                ->addColumn('menu_nama', fn($row) => $row->tipe === 'kegiatan_utama' ? 'Beranda / Kegiatan Utama' : ($row->menuKegiatan?->nama_menu ?? '-'))
                 ->addColumn('gambar', function ($row) {
                     if ($row->gambar) {
                         $url = str_starts_with($row->gambar, 'img/')
@@ -41,13 +43,6 @@ class KegiatanController extends Controller
                                     onerror="this.onerror=null;this.replaceWith(document.createTextNode(\'-\'))">';
                     }
                     return '-';
-                })
-                ->addColumn('tipe_label', function ($row) {
-                    $labels = [
-                        'kegiatan_utama' => '<span class="badge bg-label-primary">Utama</span>',
-                        'workshop_2017'  => '<span class="badge bg-label-warning">Workshop 2017</span>',
-                    ];
-                    return $labels[$row->tipe] ?? $row->tipe;
                 })
                 ->addColumn('actions', function ($row) {
                     $editUrl   = route('kegiatan.edit', $row->id);
@@ -62,27 +57,42 @@ class KegiatanController extends Controller
                         </div>
                     ';
                 })
-                ->rawColumns(['gambar', 'tipe_label', 'actions'])
+                ->rawColumns(['gambar', 'actions'])
                 ->make(true);
         }
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $breadcrumbs = $this->breadCrumbs('Tambah Kegiatan');
-        return view('kegiatan.form', compact('breadcrumbs'));
+        $breadcrumbs       = $this->breadCrumbs('Tambah Kegiatan');
+        $menuList          = MenuKegiatan::orderBy('urutan')->get();
+        $defaultMenuId     = $request->query('menu_kegiatan_id');
+        return view('kegiatan.form', compact('breadcrumbs', 'menuList', 'defaultMenuId'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'tipe'      => 'required|in:kegiatan_utama,workshop_2017',
-            'judul'     => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'gambar'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-            'kota'      => 'nullable|string|max:100',
-            'urutan'    => 'required|integer|min:0',
+            'menu_kegiatan_id' => 'required|string',
+            'judul'            => 'required|string|max:255',
+            'deskripsi'        => 'nullable|string',
+            'gambar'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'kota'             => 'nullable|string|max:100',
+            'tanggal_lokasi'   => 'nullable|string|max:255',
+            'speaker'          => 'nullable|string|max:255',
+            'urutan'           => 'required|integer|min:0',
         ]);
+
+        if ($validated['menu_kegiatan_id'] === 'kegiatan_utama') {
+            $validated['menu_kegiatan_id'] = null;
+            $validated['tipe'] = 'kegiatan_utama';
+        } else {
+            $exists = DB::table('menu_kegiatan')->where('id', $validated['menu_kegiatan_id'])->exists();
+            if (!$exists) {
+                return back()->withErrors(['menu_kegiatan_id' => 'Menu kegiatan tidak valid'])->withInput();
+            }
+            $validated['tipe'] = 'kegiatan_menu';
+        }
 
         DB::beginTransaction();
         try {
@@ -91,6 +101,12 @@ class KegiatanController extends Controller
             }
             Kegiatan::create($validated);
             DB::commit();
+
+            // Redirect back to menu_kegiatan edit if we came from there
+            if ($request->filled('redirect_menu_id')) {
+                return redirect()->route('menu_kegiatan.edit', $request->redirect_menu_id)
+                    ->with('success', 'Kegiatan berhasil ditambahkan');
+            }
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan berhasil ditambahkan');
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -101,8 +117,9 @@ class KegiatanController extends Controller
     public function edit($id)
     {
         $breadcrumbs = $this->breadCrumbs('Edit Kegiatan');
-        $data = Kegiatan::findOrFail($id);
-        return view('kegiatan.form', compact('breadcrumbs', 'data'));
+        $data        = Kegiatan::findOrFail($id);
+        $menuList    = MenuKegiatan::orderBy('urutan')->get();
+        return view('kegiatan.form', compact('breadcrumbs', 'data', 'menuList'));
     }
 
     public function update(Request $request, $id)
@@ -110,13 +127,26 @@ class KegiatanController extends Controller
         $data = Kegiatan::findOrFail($id);
 
         $validated = $request->validate([
-            'tipe'      => 'required|in:kegiatan_utama,workshop_2017',
-            'judul'     => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'gambar'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-            'kota'      => 'nullable|string|max:100',
-            'urutan'    => 'required|integer|min:0',
+            'menu_kegiatan_id' => 'required|string',
+            'judul'            => 'required|string|max:255',
+            'deskripsi'        => 'nullable|string',
+            'gambar'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'kota'             => 'nullable|string|max:100',
+            'tanggal_lokasi'   => 'nullable|string|max:255',
+            'speaker'          => 'nullable|string|max:255',
+            'urutan'           => 'required|integer|min:0',
         ]);
+
+        if ($validated['menu_kegiatan_id'] === 'kegiatan_utama') {
+            $validated['menu_kegiatan_id'] = null;
+            $validated['tipe'] = 'kegiatan_utama';
+        } else {
+            $exists = DB::table('menu_kegiatan')->where('id', $validated['menu_kegiatan_id'])->exists();
+            if (!$exists) {
+                return back()->withErrors(['menu_kegiatan_id' => 'Menu kegiatan tidak valid'])->withInput();
+            }
+            $validated['tipe'] = 'kegiatan_menu';
+        }
 
         DB::beginTransaction();
         try {
@@ -147,6 +177,10 @@ class KegiatanController extends Controller
             }
             $data->delete();
             DB::commit();
+
+            if (url()->previous() && str_contains(url()->previous(), 'menu_kegiatan')) {
+                return back()->with('success', 'Kegiatan berhasil dihapus');
+            }
             return redirect()->route('kegiatan.index')->with('success', 'Kegiatan berhasil dihapus');
         } catch (\Throwable $e) {
             DB::rollBack();
