@@ -38,13 +38,9 @@
                                 <label class="form-label">Menu Kegiatan <span class="text-danger">*</span></label>
                                  <select name="menu_kegiatan_id" class="form-select" required>
                                      <option value="">-- Pilih Menu Kegiatan --</option>
-                                     <option value="kegiatan_utama"
-                                         {{ old('menu_kegiatan_id', $data->menu_kegiatan_id ?? $defaultMenuId ?? '') === 'kegiatan_utama' || (isset($data) && $data->tipe === 'kegiatan_utama') ? 'selected' : '' }}>
-                                         Beranda / Kegiatan Utama
-                                     </option>
                                      @foreach($menuList as $menu)
                                          <option value="{{ $menu->id }}"
-                                             {{ old('menu_kegiatan_id', $data->menu_kegiatan_id ?? $defaultMenuId ?? '') == $menu->id && (!isset($data) || $data->tipe !== 'kegiatan_utama') ? 'selected' : '' }}>
+                                             {{ old('menu_kegiatan_id', $data->menu_kegiatan_id ?? $defaultMenuId ?? '') == $menu->id ? 'selected' : '' }}>
                                              @if($menu->parent_id)
                                                  &nbsp;&nbsp;&nbsp;↳ {{ $menu->parent?->nama_menu }} / {{ $menu->nama_menu }}
                                              @else

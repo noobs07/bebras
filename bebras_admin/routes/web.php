@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\MenuKegiatanController;
+use App\Http\Controllers\BerandaCmsController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\LatihanController;
 use App\Http\Controllers\RegisterController;
@@ -150,6 +151,23 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/{id}/edit', [SettingController::class, 'edit'])->name('setting.edit');
         Route::put('/{id}', [SettingController::class, 'update'])->name('setting.update');
         Route::delete('/{id}', [SettingController::class, 'destroy'])->name('setting.destroy');
+    });
+
+    // CMS Beranda
+    Route::prefix('beranda')->name('beranda.')->group(function () {
+        Route::get('/', [BerandaCmsController::class, 'index'])->name('index');
+        Route::put('/about', [BerandaCmsController::class, 'updateAbout'])->name('about.update');
+        Route::put('/cta', [BerandaCmsController::class, 'updateCta'])->name('cta.update');
+
+        // Kegiatan Beranda
+        Route::prefix('kegiatan')->name('kegiatan.')->group(function () {
+            Route::get('/list', [BerandaCmsController::class, 'list'])->name('list');
+            Route::get('/create', [BerandaCmsController::class, 'kegiatanCreate'])->name('create');
+            Route::post('/store', [BerandaCmsController::class, 'kegiatanStore'])->name('store');
+            Route::get('/{id}/edit', [BerandaCmsController::class, 'kegiatanEdit'])->name('edit');
+            Route::put('/{id}', [BerandaCmsController::class, 'kegiatanUpdate'])->name('update');
+            Route::delete('/{id}', [BerandaCmsController::class, 'kegiatanDestroy'])->name('destroy');
+        });
     });
 
 });

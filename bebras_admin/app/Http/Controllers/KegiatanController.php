@@ -29,10 +29,10 @@ class KegiatanController extends Controller
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $kegiatan = Kegiatan::with('menuKegiatan')->orderBy('menu_kegiatan_id')->orderBy('urutan');
+            $kegiatan = Kegiatan::with('menuKegiatan')->where('tipe', 'kegiatan_menu')->orderBy('menu_kegiatan_id')->orderBy('urutan');
             return DataTables::of($kegiatan)
                 ->addIndexColumn()
-                ->addColumn('menu_nama', fn($row) => $row->tipe === 'kegiatan_utama' ? 'Beranda / Kegiatan Utama' : ($row->menuKegiatan?->nama_menu ?? '-'))
+                ->addColumn('menu_nama', fn($row) => $row->menuKegiatan?->nama_menu ?? '-')
                 ->addColumn('gambar', function ($row) {
                     if ($row->gambar) {
                         $url = str_starts_with($row->gambar, 'img/')
@@ -73,7 +73,7 @@ class KegiatanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'menu_kegiatan_id' => 'required|string',
+            'menu_kegiatan_id' => 'required|exists:menu_kegiatan,id',
             'judul'            => 'required|string|max:255',
             'deskripsi'        => 'nullable|string',
             'gambar'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
@@ -83,16 +83,7 @@ class KegiatanController extends Controller
             'urutan'           => 'required|integer|min:0',
         ]);
 
-        if ($validated['menu_kegiatan_id'] === 'kegiatan_utama') {
-            $validated['menu_kegiatan_id'] = null;
-            $validated['tipe'] = 'kegiatan_utama';
-        } else {
-            $exists = DB::table('menu_kegiatan')->where('id', $validated['menu_kegiatan_id'])->exists();
-            if (!$exists) {
-                return back()->withErrors(['menu_kegiatan_id' => 'Menu kegiatan tidak valid'])->withInput();
-            }
-            $validated['tipe'] = 'kegiatan_menu';
-        }
+        $validated['tipe'] = 'kegiatan_menu';
 
         DB::beginTransaction();
         try {
@@ -127,7 +118,7 @@ class KegiatanController extends Controller
         $data = Kegiatan::findOrFail($id);
 
         $validated = $request->validate([
-            'menu_kegiatan_id' => 'required|string',
+            'menu_kegiatan_id' => 'required|exists:menu_kegiatan,id',
             'judul'            => 'required|string|max:255',
             'deskripsi'        => 'nullable|string',
             'gambar'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
@@ -137,16 +128,7 @@ class KegiatanController extends Controller
             'urutan'           => 'required|integer|min:0',
         ]);
 
-        if ($validated['menu_kegiatan_id'] === 'kegiatan_utama') {
-            $validated['menu_kegiatan_id'] = null;
-            $validated['tipe'] = 'kegiatan_utama';
-        } else {
-            $exists = DB::table('menu_kegiatan')->where('id', $validated['menu_kegiatan_id'])->exists();
-            if (!$exists) {
-                return back()->withErrors(['menu_kegiatan_id' => 'Menu kegiatan tidak valid'])->withInput();
-            }
-            $validated['tipe'] = 'kegiatan_menu';
-        }
+        $validated['tipe'] = 'kegiatan_menu';
 
         DB::beginTransaction();
         try {

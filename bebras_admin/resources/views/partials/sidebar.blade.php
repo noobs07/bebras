@@ -27,6 +27,14 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
+
+        <!-- CMS Beranda -->
+        <li class="menu-item {{ Route::is('beranda.*') ? 'active' : '' }}">
+            <a href="{{ route('beranda.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-desktop"></i>
+                <div data-i18n="CMS Beranda">CMS Beranda</div>
+            </a>
+        </li>
         <li class="menu-item {{ Route::is('tentang_bebras.index') ? 'active' : '' }}">
             <a href="{{ route('tentang_bebras.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-crown"></i>
