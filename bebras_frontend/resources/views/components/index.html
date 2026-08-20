@@ -1,0 +1,294 @@
+
+    <div class="md:hidden hidden bg-bebrasDarkBlue shadow-lg" id="mobile-menu">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a href="{{ route('home') }}"
+                class="text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+            <div class="relative block dropdown group">
+                <!-- Parent -->
+                <button
+                    class="dropdown-btn nav-link text-white px-3 py-2 rounded-md text-sm font-medium flex items-center cursor-pointer hover:bg-bebrasDarkBlue transition">
+                    Tentang Bebras
+                    <svg class="w-4 h-4 ml-1 transform transition duration-200 group-hover:rotate-180" fill="none"
+                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Dropdown -->
+                <div
+                    class="dropdown-menu absolute left-0 hidden bg-white text-black mt-2 rounded-md shadow-lg w-48 z-50">
+                    <ul class="py-2 text-sm">
+                        <li>
+                            <a href="{{ route('tentangBebras.dd_1') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_1') ? 'active' : '' }}">
+                                Apa itu Berpikir Komputasional?
+                            </a>
+                        </li>
+                        <li><a href="{{ route('tentangBebras.dd_2') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_2') ? 'active' : '' }}">Apa
+                                itu Bebras?</a></li>
+                        <li><a href="{{ route('tentangBebras.dd_3') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_3') ? 'active' : '' }}">Tujuan
+                                Kami</a></li>
+                        <li><a href="{{ route('tentangBebras.dd_4') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_4') ? 'active' : '' }}">Ruang
+                                Lingkup</a></li>
+                        <li><a href="{{ route('tentangBebras.dd_5') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_5') ? 'active' : '' }}">Kegiatan
+                                Bebras</a></li>
+                        <li><a href="{{ route('tentangBebras.dd_6') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('tentangBebras.dd_6') ? 'active' : '' }}">Sejarah
+                                Bebras Indonesia</a></li>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative block dropdown">
+                <!-- Parent -->
+                <button id="dropdownSoalBtn"
+                    class="dropdown-btn nav-link text-white px-3 py-2 rounded-md text-sm font-medium flex items-center cursor-pointer hover:bg-bebrasDarkBlue transition">
+                    Soal
+                    <svg class="w-4 h-4 ml-1 transition-transform duration-200" id="dropdownSoalIcon" fill="none"
+                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Dropdown utama -->
+                <div id="dropdownSoalMenu"
+                    class="absolute left-0 hidden bg-white text-black mt-2 rounded-md shadow-lg w-48 z-50">
+                    <ul class="py-2 text-sm">
+                        <li>
+                            <a href="{{ route('soal.index-soal') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('soal.index-soal') ? 'active' : '' }}">
+                                Apa itu Soal Bebras?
+                            </a>
+                        </li>
+
+                        <!-- Nested -->
+                        <li class="relative">
+                            <button id="dropdownContohBtn"
+                                class="flex items-center justify-between w-full px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                Contoh Soal
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <!-- Submenu -->
+                            <ul id="dropdownContohMenu"
+                                class="absolute top-0 left-full ml-1 hidden bg-white shadow-lg rounded-md w-40 z-50">
+                                <li><a href="{{ route('soal.siaga-sd') }}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Siaga Siswa SD</a></li>
+                                <li><a href="{{ route('soal.penggalang-smp') }}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Penggalang
+                                        Siswa SMP</a></li>
+                                <li><a href="{{ route('soal.penegak-sma') }}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Penegak Siswa SMA</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('soal.pembahasan-soal') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                Pembahasan Soal
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="relative block dropdown">
+                <!-- Parent -->
+                <button id="dropdownSoalKegiatan"
+                    class="dropdown-btn nav-link text-white px-3 py-2 rounded-md text-sm font-medium flex items-center cursor-pointer hover:bg-bebrasDarkBlue transition">
+                    Kegiatan
+                    <svg class="w-4 h-4 ml-1 transition-transform duration-200" id="dropdownKegiatanIcon"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Dropdown utama -->
+                <div id="dd_kegiatan"
+                    class="absolute left-0 hidden bg-white text-black mt-2 rounded-md shadow-lg w-48 z-50">
+                    <ul class="py-2 text-sm">
+                        <li>
+                            <a href="{{ route('soal.index-soal') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100 {{ request()->routeIs('soal.index-soal') ? 'active' : '' }}">
+                                Test
+                            </a>
+                        </li>
+
+                        <!-- Nested -->
+                        <li class="relative">
+                            <button id="dd_kegiatan_child1"
+                                class="flex items-center justify-between w-full px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                Contoh Soal
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <!-- Submenu -->
+                            <ul id="dd_kegiatan_sub_1"
+                                class="absolute top-0 left-full ml-1 hidden bg-white shadow-lg rounded-md w-40 z-50">
+                                <li><a href="{{ route('soal.siaga-sd') }}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Siaga Siswa SD</a></li>
+                                <li><a href="{{ route('soal.penggalang-smp') }}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Penggalang
+                                        Siswa SMP</a></li>
+                                <li><a href="{{ route('soal.penegak-sma') }}"
+                                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Penegak Siswa SMA</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('soal.pembahasan-soal') }}"
+                                class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                Pembahasan Soal
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <a href="{{ route('latihan') }}"
+                class="text-white block px-3 py-2 rounded-md text-base font-medium">Latihan</a>
+            <a href="{{ route('kontak') }}"
+                class="text-white block px-3 py-2 rounded-md text-base font-medium">Kontak</a>
+            <div class="relative mt-4 px-3">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400 ms-2"></i>
+                </div>
+                <input type="text"
+                    class="block w-full pl-10 pr-3 py-2 border border-transparent rounded-md leading-5 bg-white text-white placeholder-gray-200 focus:outline-none focus:bg-white focus:text-gray-900 focus:ring-0"
+                    placeholder="Cari...">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+document.addEventListener("DOMContentLoaded", () => {
+  // toggle mobile menu
+  document.getElementById('mobile-menu-button')?.addEventListener('click', () => {
+    document.getElementById('mobile-menu')?.classList.toggle('hidden');
+  });
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.dropdown-btn');
+
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const dropdown = btn.closest('.dropdown');
+      const menu = dropdown.querySelector('.dropdown-menu');
+
+      if (!menu) return; // <-- cegah error kalau tidak ada menu
+
+      // tutup semua dropdown lain
+      document.querySelectorAll('.dropdown-menu').forEach(m => {
+        if (m !== menu) m.classList.add('hidden');
+      });
+
+      // toggle dropdown yg diklik
+      menu.classList.toggle('hidden');
+      return;
+    }
+
+    // kalau klik di luar semua dropdown → tutup semua
+    if (!e.target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.add('hidden'));
+    }
+  });
+});
+
+document.querySelectorAll('.dropdown').forEach(dropdown => {
+  const btn = dropdown.querySelector('.dropdown-btn');
+  const menu = dropdown.querySelector('.dropdown-menu');
+  if (!btn || !menu) return;
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+
+    // tutup semua dropdown lain
+    document.querySelectorAll('.dropdown-menu').forEach(m => {
+      if (m !== menu) m.classList.add('hidden');
+    });
+
+    // toggle dropdown ini
+    menu.classList.toggle('hidden');
+  });
+});
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    menu.classList.add('hidden');
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const dropdownSoalBtn = document.getElementById("dropdownSoalBtn");
+  const dropdownSoalMenu = document.getElementById("dropdownSoalMenu");
+
+  const dropdownContohBtn = document.getElementById("dropdownContohBtn");
+  const dropdownContohMenu = document.getElementById("dropdownContohMenu");
+
+  // toggle dropdown utama
+  dropdownSoalBtn.addEventListener("click", () => {
+    dropdownSoalMenu.classList.toggle("hidden");
+  });
+
+  // toggle nested submenu
+  dropdownContohBtn.addEventListener("click", (e) => {
+    e.stopPropagation(); // biar tidak nutup menu utama
+    dropdownContohMenu.classList.toggle("hidden");
+  });
+
+  // klik di luar → tutup semua
+  document.addEventListener("click", (e) => {
+    if (!dropdownSoalBtn.contains(e.target) && !dropdownSoalMenu.contains(e.target)) {
+      dropdownSoalMenu.classList.add("hidden");
+      dropdownContohMenu.classList.add("hidden");
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const dropdownBtn = document.getElementById("dropdownSoalKegiatan"); // tombol utama
+  const dropdownMenu = document.getElementById("dd_kegiatan"); // menu utama
+
+  const childBtn = document.getElementById("dd_kegiatan_child1"); // tombol submenu
+  const childMenu = document.getElementById("dd_kegiatan_sub_1"); // submenu
+
+  // toggle dropdown utama
+  dropdownBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle("hidden");
+  });
+
+  // toggle submenu
+  childBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    childMenu.classList.toggle("hidden");
+  });
+
+  // klik di luar → tutup semua
+  document.addEventListener("click", (e) => {
+    if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+      dropdownMenu.classList.add("hidden");
+      childMenu.classList.add("hidden");
+    }
+  });
+});
+
+
+
+    </script>
