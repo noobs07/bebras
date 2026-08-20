@@ -1,16 +1,17 @@
 @extends('app')
 
 @section('content')
-<div class="col-lg-8 mb-4 order-0">
+<!-- Welcome & Status Row -->
+<div class="col-lg-8 mb-4">
     <div class="card h-100">
         <div class="d-flex align-items-end row">
             <div class="col-sm-7">
                 <div class="card-body">
                     <h5 class="card-title text-primary">Selamat Datang, {{ Auth::user()->name }}! 🎉</h5>
                     <p class="mb-4">
-                        Anda masuk sebagai administrator CMS Bebras Indonesia. Di sini Anda dapat mengelola Banner, Kegiatan, halaman Tentang Bebras, Kumpulan Soal Bebras, Buku Pembahasan, Latihan, hingga data Kontak.
+                        Selamat datang di Panel CMS Bebras Indonesia. Gunakan kartu status di bawah dan navigasi menu untuk mengelola dan mempublikasikan konten pada website landing page utama secara dinamis.
                     </p>
-                    <a href="{{ route('soal_bebras.index') }}" class="btn btn-sm btn-outline-primary">Kelola Soal Bebras</a>
+                    <a href="{{ route('soal_bebras.index') }}" class="btn btn-sm btn-outline-primary">Kelola Soal Tantangan</a>
                 </div>
             </div>
             <div class="col-sm-5 text-center text-sm-left">
@@ -22,96 +23,157 @@
     </div>
 </div>
 
-<div class="col-lg-4 col-md-4 order-1">
-    <div class="row h-100">
-        <div class="col-lg-6 col-md-12 col-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-                            <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-book-open"></i></span>
-                        </div>
-                    </div>
-                    <span class="fw-semibold d-block mb-1">Total Soal</span>
-                    <h3 class="card-title mb-2">{{ $stats['total_soal'] }}</h3>
-                    <small class="text-muted">Soal tantangan aktif</small>
+<div class="col-lg-4 mb-4">
+    <div class="card h-100">
+        <div class="card-body d-flex flex-column justify-content-between">
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Sinkronisasi Database</h5>
+                    <span class="badge bg-label-success">Terhubung</span>
                 </div>
+                <p class="text-muted mb-3 small">
+                    CMS Admin & Frontend beroperasi pada database bersama (<code class="text-primary fw-bold">kodaposc_bebras_db</code>). Perubahan data di panel ini langsung tercermin di web publik tanpa sinkronisasi HTTP tambahan.
+                </p>
             </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-6 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-                            <span class="avatar-initial rounded bg-label-success"><i class="bx bx-book"></i></span>
-                        </div>
-                    </div>
-                    <span class="fw-semibold d-block mb-1">Buku Soal</span>
-                    <h3 class="card-title mb-2">{{ $stats['total_buku'] }}</h3>
-                    <small class="text-muted">File PDF pembahasan</small>
-                </div>
+            <div>
+                <a href="{{ route('setting.index') }}" class="btn btn-sm btn-outline-secondary w-100"><i class="bx bx-cog me-1"></i>Pengaturan Situs</a>
             </div>
         </div>
     </div>
 </div>
 
+<!-- CMS Content Status Grid -->
 <div class="col-12 mb-4">
-    <div class="row">
-        <div class="col-md-3 col-6 mb-4 mb-md-0">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="avatar me-3">
-                            <span class="avatar-initial rounded bg-label-info"><i class="bx bx-calendar-event"></i></span>
+    <div class="card bg-transparent shadow-none border-0 mb-0">
+        <h5 class="pb-1 mb-3"><i class="bx bx-grid-alt me-2 text-primary"></i>Kondisi Konten Portal Saat Ini</h5>
+        <div class="row">
+            <!-- Banner -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-start border-danger border-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-danger"><i class="bx bx-image"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">{{ $stats['total_banner'] }}</h4>
                         </div>
-                        <h4 class="mb-0">{{ $stats['total_kegiatan'] }}</h4>
+                        <h6 class="mb-1">Banner Promosi</h6>
+                        <small class="text-muted">Slide gambar aktif di beranda utama</small>
                     </div>
-                    <span class="text-muted small">Total Kegiatan</span>
+                </div>
+            </div>
+            <!-- Halaman Dinamis -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-start border-primary border-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-crown"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">{{ $stats['total_tentang'] }}</h4>
+                        </div>
+                        <h6 class="mb-1">Halaman Tentang Bebras</h6>
+                        <small class="text-muted">Sub-halaman aktif di menu navbar</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Kegiatan -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-start border-info border-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-info"><i class="bx bx-calendar-event"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">{{ $stats['total_kegiatan'] }}</h4>
+                        </div>
+                        <h6 class="mb-1">Kegiatan Bebras</h6>
+                        <small class="text-muted">Kartu kegiatan yang dipublikasikan</small>
+                    </div>
+                </div>
+            </div>
+            <!-- Latihan -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100 border-start border-secondary border-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-secondary"><i class="bx bx-link-external"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">{{ $stats['total_latihan'] }}</h4>
+                        </div>
+                        <h6 class="mb-1">Tautan Latihan</h6>
+                        <small class="text-muted">Link portal kompetisi luar/eksternal</small>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-6 mb-4 mb-md-0">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="avatar me-3">
-                            <span class="avatar-initial rounded bg-label-warning"><i class="bx bx-phone"></i></span>
+        <div class="row">
+            <!-- Soal Challenge -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <div class="card h-100 border-start border-success border-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-success"><i class="bx bx-book-open"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">{{ $stats['total_soal'] }}</h4>
                         </div>
-                        <h4 class="mb-0">{{ $stats['total_kontak'] }}</h4>
+                        <h6 class="mb-1">Soal Tantangan</h6>
+                        <small class="text-muted">Kumpulan soal interaktif aktif</small>
                     </div>
-                    <span class="text-muted small">Kontak Masuk</span>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="avatar me-3">
-                            <span class="avatar-initial rounded bg-label-danger"><i class="bx bx-image"></i></span>
+            <!-- Buku Pembahasan -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <div class="card h-100 border-start border-warning border-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-warning"><i class="bx bx-book"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">{{ $stats['total_buku'] }}</h4>
                         </div>
-                        <h4 class="mb-0">{{ $stats['total_banner'] }}</h4>
+                        <h6 class="mb-1">Buku Soal PDF</h6>
+                        <small class="text-muted">Buku pembahasan yang dapat diunduh</small>
                     </div>
-                    <span class="text-muted small">Banner Carousel</span>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="avatar me-3">
-                            <span class="avatar-initial rounded bg-label-secondary"><i class="bx bx-link-external"></i></span>
+            <!-- Biro / Kontak -->
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <div class="card h-100 border-start border-info border-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-info"><i class="bx bx-map-pin"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">{{ $stats['total_kontak'] }}</h4>
                         </div>
-                        <h4 class="mb-0">{{ $stats['total_latihan'] }}</h4>
+                        <h6 class="mb-1">Biro Bebras (Kontak)</h6>
+                        <small class="text-muted">Titik kontak universitas terdaftar</small>
                     </div>
-                    <span class="text-muted small">Link Latihan</span>
+                </div>
+            </div>
+            <!-- Admin -->
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 border-start border-primary border-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2 pb-1">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-user"></i></span>
+                            </div>
+                            <h4 class="ms-1 mb-0">{{ $stats['total_admin'] }}</h4>
+                        </div>
+                        <h6 class="mb-1">Administrator</h6>
+                        <small class="text-muted">Pengguna dengan hak akses CMS</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Charts Row -->
 <div class="col-md-6 mb-4">
     <div class="card h-100">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -136,21 +198,27 @@
     </div>
 </div>
 
+<!-- Kontak Biro Section -->
 <div class="col-12">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center border-bottom pb-3">
-            <h5 class="mb-0"><i class="bx bx-phone me-2 text-primary"></i>Kontak Masuk Terbaru</h5>
-            <a href="{{ route('kontak.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+            <h5 class="mb-0"><i class="bx bx-map-pin me-2 text-primary"></i>Daftar Kontak Biro / Universitas (Landing Page)</h5>
+            <a href="{{ route('kontak.index') }}" class="btn btn-sm btn-outline-primary">Kelola Kontak</a>
         </div>
-        <div class="table-responsive text-nowrap">
+        <div class="card-body pt-3 pb-0">
+            <p class="text-muted small mb-0">
+                Berikut adalah daftar kontak biro lokal resmi Bebras Indonesia di berbagai universitas. Informasi ini ditampilkan pada menu <strong>Kontak</strong> di landing page publik agar dapat dihubungi oleh sekolah atau guru setempat.
+            </p>
+        </div>
+        <div class="table-responsive text-nowrap mt-3">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Nama</th>
-                        <th>Institusi</th>
-                        <th>Alamat</th>
-                        <th>Kontak</th>
-                        <th>Tanggal Masuk</th>
+                        <th>Nama Perwakilan / Biro</th>
+                        <th>Institusi / Universitas</th>
+                        <th>Alamat Kantor</th>
+                        <th>Metode Kontak</th>
+                        <th>Terakhir Diperbarui</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -158,7 +226,7 @@
                     <tr>
                         <td><strong>{{ $kontak->nama }}</strong></td>
                         <td>{{ $kontak->institusi ?: '-' }}</td>
-                        <td>{{ $kontak->alamat ? \Illuminate\Support\Str::limit($kontak->alamat, 40) : '-' }}</td>
+                        <td>{{ $kontak->alamat ? \Illuminate\Support\Str::limit($kontak->alamat, 45) : '-' }}</td>
                         <td>
                             @foreach($kontak->details as $detail)
                                 @if($detail->tipe == 'email')
@@ -173,11 +241,11 @@
                                 -
                             @endif
                         </td>
-                        <td>{{ $kontak->created_at ? $kontak->created_at->diffForHumans() : '-' }}</td>
+                        <td>{{ $kontak->updated_at ? $kontak->updated_at->diffForHumans() : '-' }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted py-4">Belum ada kontak masuk.</td>
+                        <td colspan="5" class="text-center text-muted py-4">Belum ada kontak biro terdaftar.</td>
                     </tr>
                     @endforelse
                 </tbody>

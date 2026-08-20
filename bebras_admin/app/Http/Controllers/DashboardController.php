@@ -8,6 +8,7 @@ use App\Models\Kontak;
 use App\Models\Latihan;
 use App\Models\SoalBook;
 use App\Models\SoalChallenge;
+use App\Models\TentangBebras;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,7 @@ class DashboardController extends Controller
             'total_banner' => Banner::count(),
             'total_latihan' => Latihan::count(),
             'total_admin' => User::count(),
+            'total_tentang' => TentangBebras::count(),
         ];
 
         // Breakdown soal berdasarkan tingkat (SD, SMP, SMA)
