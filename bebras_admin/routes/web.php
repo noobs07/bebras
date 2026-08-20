@@ -12,6 +12,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SoalBookController;
 use App\Http\Controllers\SoalController;
 use App\Http\Controllers\TentangBebrasController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -26,7 +27,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // khusus admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::prefix('akun')->group(function () {
         Route::get('/register', [RegisterController::class, 'index'])->name('register');
         Route::get('/get-akun', [RegisterController::class, 'getAkun'])->name('register.get-akun');
