@@ -3,113 +3,127 @@
 @section('title', $menu->judul ?? $menu->nama_menu)
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 py-10">
-    <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10">
+<section class="w-full px-4 py-8 md:py-12 bg-gradient-to-br from-[#F7FBFF] via-white to-[#EAF4FC] min-h-screen">
+    <div class="max-w-6xl mx-auto">
 
-        {{-- Header --}}
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b pb-6 mb-8 gap-4">
-            <div>
-                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+        {{-- Hero Header Section (Inspired by dd_7) --}}
+        <header class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#063B5C] via-[#087E9B] to-[#00CAFF] px-6 py-10 md:px-12 md:py-14 text-center shadow-xl">
+            {{-- Decorative Bubble Elements from dd_7 --}}
+            <div class="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10 pointer-events-none"></div>
+            <div class="absolute -bottom-28 -left-10 h-64 w-64 rounded-full bg-[#F7C948]/25 pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-3xl mx-auto space-y-3">
+                <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/20 px-4 py-1 rounded-full">
+                    <i class="fa-solid fa-trophy text-xs text-[#F7C948]"></i>
+                    <span class="text-xs font-bold uppercase tracking-[0.2em] text-cyan-100">Bebras Challenge</span>
+                </div>
+
+                <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-white drop-shadow-sm">
                     {{ $menu->judul ?? $menu->nama_menu }}
                 </h1>
+
                 @if($menu->body)
-                    <div class="text-gray-600 mt-3 prose tiny-content max-w-none">
+                    <div class="text-sky-50 text-sm md:text-base prose prose-invert tiny-content max-w-none leading-relaxed pt-2">
                         {!! $menu->body !!}
                     </div>
                 @endif
             </div>
-            @if($menu->gambar)
-                <img src="{{ (strpos($menu->gambar, 'img/') === 0) ? asset($menu->gambar) : asset('storage/' . $menu->gambar) }}"
-                     alt="{{ $menu->nama_menu }}"
-                     class="w-20 h-20 object-contain mx-auto md:mx-0 shrink-0 rounded-lg">
-            @else
-                <img src="{{ asset('img/done.png') }}" alt="Bebras"
-                     class="w-16 h-16 mx-auto md:mx-0 shrink-0">
-            @endif
-        </div>
+        </header>
 
-        {{-- Kegiatan Cards --}}
-        @if($menu->kegiatans->isNotEmpty())
-            <div class="space-y-10">
-                @foreach($menu->kegiatans as $kegiatan)
-                    @php
-                        $gambarUrl = null;
-                        if ($kegiatan->gambar) {
-                            $gambarUrl = str_starts_with($kegiatan->gambar, 'img/')
-                                ? asset($kegiatan->gambar)
-                                : asset('storage/' . $kegiatan->gambar);
-                        }
-
-                        $tglFormatted = null;
-                        if ($kegiatan->tanggal_lokasi) {
-                            try {
-                                $tglFormatted = \Carbon\Carbon::parse($kegiatan->tanggal_lokasi)->translatedFormat('d F Y');
-                            } catch (\Exception $e) {
-                                $tglFormatted = $kegiatan->tanggal_lokasi;
+        {{-- Main Content Section --}}
+        <div class="mt-8">
+            @if($menu->kegiatans->isNotEmpty())
+                <div class="space-y-8">
+                    @foreach($menu->kegiatans as $index => $kegiatan)
+                        @php
+                            $gambarUrl = null;
+                            if ($kegiatan->gambar) {
+                                $gambarUrl = str_starts_with($kegiatan->gambar, 'img/')
+                                    ? asset($kegiatan->gambar)
+                                    : asset('storage/' . $kegiatan->gambar);
                             }
-                        }
-                    @endphp
 
-                    <div class="bg-gray-50/60 rounded-2xl shadow-sm hover:shadow-md transition duration-300 overflow-hidden border border-gray-200/80">
+                            $tglFormatted = null;
+                            if ($kegiatan->tanggal_lokasi) {
+                                try {
+                                    $tglFormatted = \Carbon\Carbon::parse($kegiatan->tanggal_lokasi)->translatedFormat('d F Y');
+                                } catch (\Exception $e) {
+                                    $tglFormatted = $kegiatan->tanggal_lokasi;
+                                }
+                            }
+                        @endphp
 
-                        {{-- Tampilan Banner (Lebar menyesuaikan panjang/dimensi img yang diupload) --}}
-                        @if($gambarUrl)
-                            <div class="w-full bg-slate-100/70 p-4 md:p-6 flex justify-center items-center border-b border-gray-200/60 overflow-hidden">
-                                <img src="{{ $gambarUrl }}"
-                                     alt="{{ $kegiatan->judul }}"
-                                     class="max-w-full h-auto object-contain rounded-xl shadow-sm transition-transform duration-300 hover:scale-[1.01]">
-                            </div>
-                        @endif
+                        <div class="bg-white rounded-2xl border border-cyan-100 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+                            {{-- Top Accent Line --}}
+                            <div class="h-1.5 bg-gradient-to-r from-[#063B5C] via-[#087E9B] to-[#F7C948]"></div>
 
-                        <div class="p-6 md:p-8">
-                            {{-- Metadata opsional (Kota, Tanggal, Speaker) --}}
-                            @if($kegiatan->kota || $tglFormatted || $kegiatan->speaker)
-                                <div class="flex flex-wrap items-center gap-3 text-xs md:text-sm text-gray-600 mb-4 pb-3 border-b border-gray-200/60">
-                                    @if($kegiatan->kota)
-                                        <span class="font-semibold text-bebrasDarkBlue bg-bebrasLightBlue px-3 py-1 rounded-full border border-sky-200">
-                                            📍 {{ $kegiatan->kota }}
-                                        </span>
-                                    @endif
-                                    @if($tglFormatted)
-                                        <span class="font-medium flex items-center gap-1 text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-200">
-                                            📅 {{ $tglFormatted }}
-                                        </span>
-                                    @endif
-                                    @if($kegiatan->speaker)
-                                        <span class="font-medium flex items-center gap-1 text-gray-700 bg-white px-3 py-1 rounded-full border border-gray-200">
-                                            🎤 {{ $kegiatan->speaker }}
-                                        </span>
-                                    @endif
+                            {{-- Banner Image Section --}}
+                            @if($gambarUrl)
+                                <div class="w-full bg-slate-50 p-4 md:p-6 flex justify-center items-center border-b border-cyan-100/70 overflow-hidden group">
+                                    <img src="{{ $gambarUrl }}"
+                                         alt="{{ $kegiatan->judul }}"
+                                         class="max-w-full h-auto max-h-[440px] object-contain rounded-xl shadow-xs transition-transform duration-300 group-hover:scale-[1.005]">
                                 </div>
                             @endif
 
-                            {{-- Judul --}}
-                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-5 leading-snug">
-                                {{ $kegiatan->judul }}
-                            </h2>
+                            <div class="p-6 md:p-10">
+                                {{-- Card Header & Metadata --}}
+                                <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-cyan-100">
+                                    @if($kegiatan->kota || $tglFormatted || $kegiatan->speaker)
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            @if($kegiatan->kota)
+                                                <span class="inline-flex items-center gap-1.5 font-semibold text-xs md:text-sm text-[#087E9B] bg-[#E6F7FF] px-3.5 py-1.5 rounded-full border border-sky-200/80">
+                                                    <i class="fa-solid fa-location-dot text-xs text-[#087E9B]"></i>
+                                                    {{ $kegiatan->kota }}
+                                                </span>
+                                            @endif
+                                            @if($tglFormatted)
+                                                <span class="inline-flex items-center gap-1.5 font-medium text-xs md:text-sm text-slate-700 bg-sky-50/70 px-3.5 py-1.5 rounded-full border border-sky-100">
+                                                    <i class="fa-regular fa-calendar-days text-xs text-sky-600"></i>
+                                                    {{ $tglFormatted }}
+                                                </span>
+                                            @endif
+                                            @if($kegiatan->speaker)
+                                                <span class="inline-flex items-center gap-1.5 font-medium text-xs md:text-sm text-slate-700 bg-slate-50 px-3.5 py-1.5 rounded-full border border-slate-200/80">
+                                                    <i class="fa-solid fa-user-tie text-xs text-slate-500"></i>
+                                                    {{ $kegiatan->speaker }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <div></div>
+                                    @endif
 
-                            {{-- Deskripsi Rich-Text TinyMCE --}}
-                            <div class="prose tiny-content max-w-none text-gray-700 leading-relaxed">
-                                {!! $kegiatan->deskripsi !!}
+                                    <span class="text-xs font-bold text-[#087E9B] bg-[#E6F7FF] px-3 py-1 rounded-full border border-cyan-200">
+                                        Kegiatan #{{ $index + 1 }}
+                                    </span>
+                                </div>
+
+                                {{-- Judul Kegiatan --}}
+                                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 leading-snug mb-4">
+                                    {{ $kegiatan->judul }}
+                                </h2>
+
+                                {{-- Content --}}
+                                <div class="prose tiny-content max-w-none text-slate-600 leading-relaxed text-base md:text-lg">
+                                    {!! $kegiatan->deskripsi !!}
+                                </div>
                             </div>
                         </div>
-
+                    @endforeach
+                </div>
+            @else
+                {{-- Empty State --}}
+                <div class="bg-white rounded-2xl p-12 text-center border border-cyan-100 shadow-sm max-w-2xl mx-auto">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[#E6F7FF] flex items-center justify-center text-[#087E9B]">
+                        <i class="fa-regular fa-folder-open text-2xl"></i>
                     </div>
-                @endforeach
-            </div>
-        @else
-            {{-- Empty State --}}
-            <div class="text-center py-16 text-gray-400">
-                <svg class="w-16 h-16 mx-auto mb-4 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                <p class="text-lg font-medium">Belum ada konten untuk halaman ini.</p>
-                <p class="text-sm mt-1">Tambahkan konten melalui halaman admin.</p>
-            </div>
-        @endif
+                    <h3 class="text-xl font-bold text-slate-800">Belum Ada Konten Tantangan</h3>
+                    <p class="text-sm text-slate-500 mt-1">Informasi kegiatan Bebras Challenge akan ditampilkan di halaman ini.</p>
+                </div>
+            @endif
+        </div>
 
     </div>
-</div>
+</section>
 @endsection
-

@@ -93,6 +93,7 @@
                                                     'dd_4' => 'Gaya 4 — Teks + Grid Ruang Lingkup (dengan item: Ruang Lingkup)',
                                                     'dd_5' => 'Gaya 5 — Teks + List Kegiatan & Kategori (dengan item: Kegiatan / Kategori)',
                                                     'dd_6' => 'Gaya 6 — Teks + Timeline Sejarah (dengan item: Timeline)',
+                                                    'dd_7' => 'Gaya 7 — Bebras Biro (Header Hero + Koordinator Biro)',
                                                 ];
                                                 $selectedTemplate = old('template', $data->template ?? 'dd_1');
                                             @endphp
