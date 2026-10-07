@@ -93,6 +93,7 @@
                                                     'dd_4' => 'Gaya 4 — Teks + Grid Ruang Lingkup (dengan item: Ruang Lingkup)',
                                                     'dd_5' => 'Gaya 5 — Teks + List Kegiatan & Kategori (dengan item: Kegiatan / Kategori)',
                                                     'dd_6' => 'Gaya 6 — Teks + Timeline Sejarah (dengan item: Timeline)',
+                                                    'dd_7' => 'Gaya 7 — Daftar Bebras Biro (Instansi dan Koordinator)',
                                                 ];
                                                 $selectedTemplate = old('template', $data->template ?? 'dd_1');
                                             @endphp
@@ -268,12 +269,13 @@
                                              <input type="text" name="icon" id="item_icon" class="form-control" placeholder="🌱 atau path SVG">
                                          </div>
                                          <div class="mb-3">
-                                             <label class="form-label">Judul</label>
+                                             <label class="form-label" id="item_judul_label">Judul</label>
                                              <input type="text" name="judul" id="item_judul" class="form-control" placeholder="Judul item">
                                          </div>
                                          <div class="mb-3">
-                                             <label class="form-label">Deskripsi / Detail</label>
+                                             <label class="form-label" id="item_deskripsi_label">Deskripsi / Detail</label>
                                              <textarea name="deskripsi" id="item_deskripsi" class="form-control" rows="3" placeholder="Gunakan tag HTML jika diperlukan"></textarea>
+                                             <small id="item_deskripsi_help" class="text-muted" style="display:none;">Format: Nama Koordinator | email@contoh.com</small>
                                          </div>
                                          <div class="mb-3">
                                              <label class="form-label">Warna Latar Belakang (Class Tailwind)</label>
@@ -358,7 +360,8 @@
                     {value: 'kegiatan_list', label: 'List Kegiatan'},
                     {value: 'kategori_tantangan', label: 'Kategori Tantangan'}
                 ],
-                dd_6: [{value: 'timeline', label: 'Timeline Sejarah'}]
+                dd_6: [{value: 'timeline', label: 'Timeline Sejarah'}],
+                dd_7: [{value: 'biro_list', label: 'Daftar Bebras Biro'}]
             };
 
             function setTinyMceReadonly(id, isReadonly) {
@@ -411,7 +414,7 @@
                 }
 
                 // Show/hide item manager wrappers based on support
-                const supportsItems = ['dd_3', 'dd_4', 'dd_5', 'dd_6'].includes(templateValue);
+                const supportsItems = ['dd_3', 'dd_4', 'dd_5', 'dd_6', 'dd_7'].includes(templateValue);
                 
                 const itemInfoWrapper = document.getElementById('item-manager-info-wrapper');
                 if (itemInfoWrapper) {
@@ -434,6 +437,26 @@
                         opt.innerText = type.label;
                         itemTipeSelect.appendChild(opt);
                     });
+                }
+
+                const itemJudulLabel = document.getElementById('item_judul_label');
+                const itemDeskripsiLabel = document.getElementById('item_deskripsi_label');
+                const itemDeskripsi = document.getElementById('item_deskripsi');
+                const itemDeskripsiHelp = document.getElementById('item_deskripsi_help');
+                const isBiroTemplate = templateValue === 'dd_7';
+                if (itemJudulLabel) {
+                    itemJudulLabel.textContent = isBiroTemplate ? 'Nama Instansi/Lembaga' : 'Judul';
+                }
+                if (itemDeskripsiLabel) {
+                    itemDeskripsiLabel.textContent = isBiroTemplate ? 'Koordinator dan Email' : 'Deskripsi / Detail';
+                }
+                if (itemDeskripsi) {
+                    itemDeskripsi.placeholder = isBiroTemplate
+                        ? 'Nama Koordinator | email@contoh.com'
+                        : 'Gunakan tag HTML jika diperlukan';
+                }
+                if (itemDeskripsiHelp) {
+                    itemDeskripsiHelp.style.display = isBiroTemplate ? '' : 'none';
                 }
             }
 

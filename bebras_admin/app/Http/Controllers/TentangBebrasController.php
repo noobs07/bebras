@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\TentangBebras;
@@ -94,7 +95,7 @@ class TentangBebrasController extends Controller
             'konten'   => $request->template === 'dd_4' ? 'nullable|string' : 'required|string',
             'gambar'   => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
             'urutan'   => 'required|integer',
-            'template' => 'required|in:dd_1,dd_2,dd_3,dd_4,dd_5,dd_6',
+            'template' => 'required|in:dd_1,dd_2,dd_3,dd_4,dd_5,dd_6,dd_7',
         ]);
 
         if ($request->template === 'dd_4') {
@@ -141,7 +142,7 @@ class TentangBebrasController extends Controller
             'konten'   => $request->template === 'dd_4' ? 'nullable|string' : 'required|string',
             'gambar'   => 'nullable|image|mimes:jpg,jpeg,png|max:4096',
             'urutan'   => 'required|integer|min:0',
-            'template' => 'required|in:dd_1,dd_2,dd_3,dd_4,dd_5,dd_6',
+            'template' => 'required|in:dd_1,dd_2,dd_3,dd_4,dd_5,dd_6,dd_7',
         ]);
 
         if ($request->template === 'dd_4') {

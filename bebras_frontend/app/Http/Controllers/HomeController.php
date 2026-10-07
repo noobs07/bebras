@@ -13,6 +13,12 @@ class HomeController extends Controller
     {
         $banners = Banner::orderBy('urutan', 'asc')->get();
         $kegiatans = Kegiatan::where('tipe', 'kegiatan_utama')->orderBy('urutan', 'asc')->get();
+        $beritas = Kegiatan::where('tipe', 'berita')
+            ->where('status_validasi', 'approved')
+            ->orderBy('urutan', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
         $aboutLogo = Setting::getByKey('home_about_logo', 'img/logo.jpg');
         $aboutContent = Setting::getByKey('home_about_content');
         $ctaTitle = Setting::getByKey('home_cta_title', 'Bebras Indonesia Challenge 2024');
@@ -22,6 +28,7 @@ class HomeController extends Controller
         return view('pages.home', compact(
             'banners',
             'kegiatans',
+            'beritas',
             'aboutLogo',
             'aboutContent',
             'ctaTitle',

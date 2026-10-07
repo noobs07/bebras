@@ -103,6 +103,117 @@
         </div>
     </section>
 
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center">
+                    <div class="h-1 w-24 bg-bebrasBlue mr-3"></div>
+                    Berita
+                </h2>
+                <a href="{{ route('berita') }}"
+                    class="text-sm font-semibold text-bebrasBlue hover:text-[#F97A00] inline-flex items-center">
+                    Lihat semua <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            @if ($beritas->isNotEmpty())
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @foreach ($beritas as $berita)
+                        @php
+                            $tglFormatted = null;
+                            if ($berita->tanggal_lokasi) {
+                                try {
+                                    $tglFormatted = \Carbon\Carbon::parse($berita->tanggal_lokasi)->translatedFormat('d F Y');
+                                } catch (\Exception $e) {
+                                    $tglFormatted = $berita->tanggal_lokasi;
+                                }
+                            }
+
+                            $gambarUrl = null;
+                            if ($berita->gambar) {
+                                $gambarUrl = str_starts_with($berita->gambar, 'img/')
+                                    ? asset($berita->gambar)
+                                    : asset('storage/' . $berita->gambar);
+                            }
+
+                            $beritaData = json_encode([
+                                'judul' => $berita->judul,
+                                'gambar' => $gambarUrl,
+                                'kota' => $berita->kota,
+                                'tanggal' => $tglFormatted,
+                                'deskripsi' => $berita->deskripsi,
+                            ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+                        @endphp
+                        <article class="bg-white rounded-xl shadow-md overflow-hidden card-hover flex flex-col">
+                            <div class="h-48 overflow-hidden">
+                                @if ($gambarUrl)
+                                    <img src="{{ $gambarUrl }}" alt="{{ $berita->judul }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                        <i class="fas fa-image text-3xl text-gray-300"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="p-6 flex flex-col flex-1">
+                                <h3 class="text-lg font-bold text-gray-800 mb-2">{{ $berita->judul }}</h3>
+                                <div class="space-y-1 mb-3">
+                                    @if ($tglFormatted)
+                                        <p class="text-gray-500 text-xs flex items-center gap-1 font-medium">
+                                            <span>📅</span> {{ $tglFormatted }}
+                                        </p>
+                                    @endif
+                                    @if ($berita->kota)
+                                        <p class="text-gray-500 text-xs flex items-center gap-1">
+                                            <span>📍</span> {{ $berita->kota }}
+                                        </p>
+                                    @endif
+                                </div>
+                                <p class="text-gray-600 text-sm">
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($berita->deskripsi), 160) }}
+                                </p>
+                                <a href="{{ route('berita') }}"
+                                    onclick='event.preventDefault(); openBeritaModal({!! $beritaData !!})'
+                                    class="mt-auto pt-4 text-xs font-semibold text-bebrasDarkBlue hover:text-bebrasBlue inline-flex items-center gap-1">
+                                    Lihat selengkapnya <i class="fas fa-arrow-right text-[10px]"></i>
+                                </a>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-center text-gray-600">Belum ada berita.</p>
+            @endif
+        </div>
+    </section>
+
+    <div id="beritaModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+        onclick="closeBeritaModal()">
+        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden my-8" onclick="event.stopPropagation()">
+            <div class="relative bg-gradient-to-r from-bebrasDarkBlue to-bebrasBlue p-6 text-white">
+                <button type="button" onclick="closeBeritaModal()"
+                    class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full w-8 h-8 flex items-center justify-center">
+                    <i class="fas fa-times"></i>
+                </button>
+                <span id="beritaModalKota" class="inline-block text-xs font-semibold uppercase bg-white/20 px-2.5 py-1 rounded-full mb-2 hidden"></span>
+                <h3 id="beritaModalJudul" class="text-xl md:text-2xl font-bold leading-tight pr-8"></h3>
+            </div>
+            <div class="p-6 max-h-[75vh] overflow-y-auto">
+                <img id="beritaModalGambar" src="" alt="" class="w-full max-h-80 object-cover rounded-xl shadow mb-4 hidden">
+                <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-4 pb-4 border-b">
+                    <span id="beritaModalTanggal" class="hidden items-center gap-1.5 font-medium"></span>
+                </div>
+                <div id="beritaModalDeskripsi" class="prose max-w-none text-gray-700 leading-relaxed text-sm md:text-base"></div>
+            </div>
+            <div class="bg-gray-50 px-6 py-4 border-t flex justify-end">
+                <button type="button" onclick="closeBeritaModal()"
+                    class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-lg transition text-sm">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="flex flex-col md:flex-row items-center p-6 mt-4 rounded-md">
 
         <div class="w-full md:w-4/4 text-center md:text-left md:pl-8">
@@ -119,6 +230,40 @@
     </div>
     @push('scripts')
         <script src="{{ asset('js/script.js') }}"></script>
+        <script>
+            function openBeritaModal(data) {
+                document.getElementById('beritaModalJudul').innerText = data.judul || '';
+                document.getElementById('beritaModalDeskripsi').innerHTML = data.deskripsi || '';
+
+                const kota = document.getElementById('beritaModalKota');
+                kota.innerText = data.kota || '';
+                kota.classList.toggle('hidden', !data.kota);
+
+                const tanggal = document.getElementById('beritaModalTanggal');
+                tanggal.innerHTML = data.tanggal ? '<span>📅</span> ' + data.tanggal : '';
+                tanggal.classList.toggle('hidden', !data.tanggal);
+                tanggal.classList.toggle('flex', Boolean(data.tanggal));
+
+                const gambar = document.getElementById('beritaModalGambar');
+                gambar.src = data.gambar || '';
+                gambar.alt = data.judul || '';
+                gambar.classList.toggle('hidden', !data.gambar);
+
+                document.getElementById('beritaModal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeBeritaModal() {
+                document.getElementById('beritaModal').classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    closeBeritaModal();
+                }
+            });
+        </script>
     @endpush
 
 @endsection
