@@ -31,9 +31,14 @@ class MenuKegiatanController extends Controller
                 ->addColumn('actions', function ($row) {
                     $editUrl   = route('menu_kegiatan.edit', $row->id);
                     $deleteUrl = route('menu_kegiatan.destroy', $row->id);
+                    $statistikLink = '';
+                    if ($row->template === 'statistik') {
+                        $statistikLink = '<a href="' . route('statistik.index') . '" class="btn btn-sm btn-info" title="Kelola Data Statistik"><i class="bx bx-bar-chart-alt-2"></i> Statistik</a>';
+                    }
                     return '
                         <div class="d-flex gap-1">
                             <a href="' . $editUrl . '" class="btn btn-sm btn-warning"><i class="bx bx-edit"></i></a>
+                            ' . $statistikLink . '
                             <form action="' . $deleteUrl . '" method="POST" onsubmit="return confirm(\'Hapus menu ini?\')">
                                 ' . csrf_field() . method_field('DELETE') . '
                                 <button class="btn btn-sm btn-danger"><i class="bx bx-trash"></i></button>
@@ -67,7 +72,7 @@ class MenuKegiatanController extends Controller
             'url'       => 'nullable|url|max:500',
             'gambar'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'urutan'    => 'required|integer|min:0',
-            'template'  => ['nullable', Rule::in(['bebras_challenge', 'workshop', 'pengumuman_hasil'])],
+            'template'  => ['nullable', Rule::in(['bebras_challenge', 'workshop', 'pengumuman_hasil', 'statistik'])],
         ]);
 
         $validated['slug'] = $validated['slug'] ?: Str::slug($validated['nama_menu']);
@@ -115,7 +120,7 @@ class MenuKegiatanController extends Controller
             'url'       => 'nullable|url|max:500',
             'gambar'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'urutan'    => 'required|integer|min:0',
-            'template'  => ['nullable', Rule::in(['bebras_challenge', 'workshop', 'pengumuman_hasil'])],
+            'template'  => ['nullable', Rule::in(['bebras_challenge', 'workshop', 'pengumuman_hasil', 'statistik'])],
         ]);
 
         $validated['slug'] = $validated['slug'] ?: Str::slug($validated['nama_menu']);

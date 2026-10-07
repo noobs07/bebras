@@ -11,6 +11,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SoalBookController;
 use App\Http\Controllers\SoalController;
+use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\TentangBebrasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Berita\BeritaBiroController;
@@ -111,6 +112,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/{id}/update', [LatihanController::class, 'update'])->name('latihan.update');
         Route::delete('/{id}', [LatihanController::class, 'destroy'])->name('latihan.destroy');
         Route::get('/{id}/deskripsi', [LatihanController::class, 'deskripsi'])->name('latihan.deskripsi');
+    });
+
+    // Statistik Bebras Indonesia Challenge
+    Route::prefix('statistik')->group(function () {
+        Route::get('/', [StatisticController::class, 'index'])->name('statistik.index');
+        Route::get('/list', [StatisticController::class, 'list'])->name('statistik.list');
+        Route::post('/store', [StatisticController::class, 'store'])->name('statistik.store');
+        Route::get('/{id}/edit', [StatisticController::class, 'edit'])->name('statistik.edit');
+        Route::delete('/{id}', [StatisticController::class, 'destroy'])->name('statistik.destroy');
     });
 
     // Banner (Carousel)

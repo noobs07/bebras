@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MenuKegiatan;
+use App\Models\Statistic;
 use Illuminate\Http\Request;
 
 class KegiatanController extends Controller
@@ -29,7 +30,14 @@ class KegiatanController extends Controller
             return redirect()->away($menu->url);
         }
 
-        return match($menu->resolveTemplate()) {
+        $template = $menu->resolveTemplate();
+
+        if ($template === 'statistik') {
+            $statistik = Statistic::orderBy('year')->get();
+            return view('pages.kegiatan.statistik', compact('menu', 'statistik'));
+        }
+
+        return match($template) {
             'bebras_challenge' => view('pages.kegiatan.bebras_challenge', compact('menu')),
             'workshop'         => view('pages.kegiatan.workshop', compact('menu')),
             'pengumuman_hasil' => view('pages.kegiatan.pengumuman_hasil', compact('menu')),
