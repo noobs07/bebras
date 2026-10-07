@@ -62,6 +62,7 @@
                                         <option value="bebras_challenge" {{ old('template', $data->template ?? '') === 'bebras_challenge' ? 'selected' : '' }}>Bebras Challenge</option>
                                         <option value="workshop" {{ old('template', $data->template ?? '') === 'workshop' ? 'selected' : '' }}>Workshop</option>
                                         <option value="pengumuman_hasil" {{ old('template', $data->template ?? '') === 'pengumuman_hasil' ? 'selected' : '' }}>Pengumuman Hasil</option>
+                                        <option value="statistik" {{ old('template', $data->template ?? '') === 'statistik' ? 'selected' : '' }}>Statistik</option>
                                     </select>
                                     @error('template')
                                         <div class="invalid-feedback">{{ $message }}</div>

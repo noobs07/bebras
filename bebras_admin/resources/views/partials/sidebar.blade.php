@@ -101,6 +101,14 @@
                 </a>
             </li>
 
+            <!-- Statistik Bebras -->
+            <li class="menu-item {{ Route::is('statistik.*') ? 'active' : '' }}">
+                <a href="{{ route('statistik.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+                    <div data-i18n="Statistik">Statistik</div>
+                </a>
+            </li>
+
             <!-- Menu Kegiatan -->
             <li class="menu-item {{ Route::is('menu_kegiatan.*') ? 'active' : '' }}">
                 <a href="{{ route('menu_kegiatan.index') }}" class="menu-link">

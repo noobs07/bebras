@@ -61,6 +61,16 @@
                                 </div>
                             @endif
 
+                            {{-- Alert untuk template Statistik --}}
+                            <div id="alert-statistik" class="alert alert-warning py-3 mb-3" style="display:none;">
+                                <i class="bx bx-error-circle me-2"></i>
+                                <strong>Menu ini bertipe Statistik.</strong>
+                                Data statistik tidak dikelola melalui form ini.
+                                <a href="{{ route('statistik.index') }}" class="alert-link ms-2">
+                                    &rarr; Kelola Data Statistik
+                                </a>
+                            </div>
+
                             <div class="mb-3">
                                 <label class="form-label">Judul <span class="text-danger">*</span></label>
                                 <input type="text" name="judul" class="form-control"
@@ -157,8 +167,26 @@
         const fieldTanggalLokasi = document.getElementById('field-tanggal-lokasi');
         const fieldSpeaker       = document.getElementById('field-speaker');
         const fieldGambar        = document.getElementById('field-gambar');
+        const fieldDeskripsi     = document.getElementById('field-deskripsi');
 
         if (template === 'bebras_challenge' || template === 'pengumuman_hasil') {
+            // Sembunyikan alert statistik dan tampilkan tombol submit
+            const alertStatistik = document.getElementById('alert-statistik');
+            if (alertStatistik) { alertStatistik.style.display = 'none'; }
+            const submitBtn = document.querySelector('[type="submit"]');
+            if (submitBtn) { submitBtn.style.display = ''; }
+            // Kembalikan field judul dan urutan ke state normal
+            const fieldJudul = document.querySelector('[name="judul"]')?.closest('.mb-3');
+            if (fieldJudul) {
+                fieldJudul.style.display = '';
+                fieldJudul.querySelectorAll('input').forEach(el => el.disabled = false);
+            }
+            const fieldUrutan = document.querySelector('[name="urutan"]')?.closest('.mb-3');
+            if (fieldUrutan) {
+                fieldUrutan.style.display = '';
+                fieldUrutan.querySelectorAll('input').forEach(el => el.disabled = false);
+            }
+
             // Inisialisasi TinyMCE pada #deskripsi jika belum aktif
             if (typeof tinymce !== 'undefined' && !tinymce.get('deskripsi')) {
                 initTinyMCE('#deskripsi');
@@ -180,6 +208,23 @@
             });
 
         } else if (template === 'workshop') {
+            // Sembunyikan alert statistik dan tampilkan tombol submit
+            const alertStatistik = document.getElementById('alert-statistik');
+            if (alertStatistik) { alertStatistik.style.display = 'none'; }
+            const submitBtn = document.querySelector('[type="submit"]');
+            if (submitBtn) { submitBtn.style.display = ''; }
+            // Kembalikan field judul dan urutan ke state normal
+            const fieldJudul = document.querySelector('[name="judul"]')?.closest('.mb-3');
+            if (fieldJudul) {
+                fieldJudul.style.display = '';
+                fieldJudul.querySelectorAll('input').forEach(el => el.disabled = false);
+            }
+            const fieldUrutan = document.querySelector('[name="urutan"]')?.closest('.mb-3');
+            if (fieldUrutan) {
+                fieldUrutan.style.display = '';
+                fieldUrutan.querySelectorAll('input').forEach(el => el.disabled = false);
+            }
+
             // Destroy TinyMCE jika aktif — kembalikan ke textarea biasa
             if (typeof tinymce !== 'undefined' && tinymce.get('deskripsi')) {
                 tinymce.get('deskripsi').remove();
@@ -193,8 +238,58 @@
                 });
             });
 
+        } else if (template === 'statistik') {
+            // Tampilkan alert statistik
+            const alertStatistik = document.getElementById('alert-statistik');
+            if (alertStatistik) { alertStatistik.style.display = ''; }
+
+            // Sembunyikan dan disable semua field konten
+            const submitBtn = document.querySelector('[type="submit"]');
+            const fieldJudul = document.querySelector('[name="judul"]')?.closest('.mb-3');
+            [fieldDeskripsi, fieldKota, fieldTanggalLokasi, fieldSpeaker, fieldGambar].forEach(function (field) {
+                if (!field) { return; }
+                field.style.display = 'none';
+                field.querySelectorAll('input, select, textarea').forEach(function (el) {
+                    el.disabled = true;
+                    el.value = '';
+                });
+            });
+            // Sembunyikan field judul
+            if (fieldJudul) {
+                fieldJudul.style.display = 'none';
+                fieldJudul.querySelectorAll('input').forEach(function (el) {
+                    el.disabled = true;
+                    el.value = '';
+                });
+            }
+            // Sembunyikan field urutan
+            const fieldUrutan = document.querySelector('[name="urutan"]')?.closest('.mb-3');
+            if (fieldUrutan) {
+                fieldUrutan.style.display = 'none';
+                fieldUrutan.querySelectorAll('input').forEach(function (el) {
+                    el.disabled = true;
+                });
+            }
+            if (submitBtn) { submitBtn.style.display = 'none'; }
+
         } else {
-            // null / fallback — tampilkan semua field, biarkan TinyMCE tetap berjalan
+            // null / fallback — sembunyikan alert statistik, tampilkan semua field, biarkan TinyMCE tetap berjalan
+            const alertStatistik = document.getElementById('alert-statistik');
+            if (alertStatistik) { alertStatistik.style.display = 'none'; }
+            const submitBtn = document.querySelector('[type="submit"]');
+            if (submitBtn) { submitBtn.style.display = ''; }
+            // Kembalikan field judul dan urutan ke state normal
+            const fieldJudul = document.querySelector('[name="judul"]')?.closest('.mb-3');
+            if (fieldJudul) {
+                fieldJudul.style.display = '';
+                fieldJudul.querySelectorAll('input').forEach(el => el.disabled = false);
+            }
+            const fieldUrutan = document.querySelector('[name="urutan"]')?.closest('.mb-3');
+            if (fieldUrutan) {
+                fieldUrutan.style.display = '';
+                fieldUrutan.querySelectorAll('input').forEach(el => el.disabled = false);
+            }
+
             [fieldKota, fieldTanggalLokasi, fieldSpeaker, fieldGambar].forEach(function (field) {
                 field.style.display = '';
                 field.querySelectorAll('input, select, textarea').forEach(function (el) {
