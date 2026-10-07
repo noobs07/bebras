@@ -69,13 +69,10 @@
                         </div>
                     </div>
 
-
                     <div class="flex flex-col md:flex-row">
-
                         <div class="w-full md:w-4/5 pr-0 md:pr-8">
                             {!! $aboutContent !!}
                         </div>
-
                     </div>
                 </div>
             </div>
