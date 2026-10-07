@@ -21,7 +21,16 @@ class MenuKegiatan extends Model
         'gambar',
         'url',
         'urutan',
+        'template',
     ];
+
+    public function resolveTemplate(): ?string
+    {
+        if (is_null($this->parent_id)) {
+            return $this->template;
+        }
+        return $this->parent?->template;
+    }
 
     public function parent(): BelongsTo
     {

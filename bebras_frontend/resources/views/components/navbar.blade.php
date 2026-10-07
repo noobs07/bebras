@@ -3,8 +3,10 @@
         <div class="flex justify-between items-center h-16">
             {{-- Logo --}}
             <div class="flex-shrink-0 flex items-center">
-                <img src="{{ asset('img/bebras.png') }}" alt="Logo Bebras" class="h-10">
-                {{-- <span class="ml-2 text-white font-semibold text-xl hidden sm:block">Bebras Indonesia</span> --}}
+                <a href="{{ route('home') }}" class="flex items-center" title="Beranda">
+                    <img src="{{ asset('img/bebras.png') }}" alt="Logo Bebras" class="h-10 hover:opacity-85 transition-opacity duration-200">
+                    {{-- <span class="ml-2 text-white font-semibold text-xl hidden sm:block">Bebras Indonesia</span> --}}
+                </a>
             </div>
 
             {{-- Desktop Menu --}}

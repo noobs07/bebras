@@ -36,7 +36,9 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Menu Kegiatan <span class="text-danger">*</span></label>
-                                 <select name="menu_kegiatan_id" class="form-select" required>
+                                 <select name="menu_kegiatan_id" id="menu-kegiatan-select" class="form-select" required
+                         data-template-url="{{ route('kegiatan.menu.template', ':id') }}"
+                 >
                                      <option value="">-- Pilih Menu Kegiatan --</option>
                                      @foreach($menuList as $menu)
                                          <option value="{{ $menu->id }}"
@@ -52,36 +54,51 @@
                                 <small class="text-muted">Pilih menu kegiatan tempat kegiatan ini akan muncul sebagai kartu.</small>
                             </div>
 
+                            @if(isset($isMenuNotLeaf) && $isMenuNotLeaf)
+                                <div class="alert alert-warning py-2">
+                                    <i class="bx bx-error-circle me-1"></i>
+                                    Menu yang dipilih sudah memiliki sub-menu.
+                                </div>
+                            @endif
+
                             <div class="mb-3">
                                 <label class="form-label">Judul <span class="text-danger">*</span></label>
                                 <input type="text" name="judul" class="form-control"
                                        value="{{ old('judul', $data->judul ?? '') }}" required>
                             </div>
 
+                            <div id="field-deskripsi">
                             <div class="mb-3">
                                 <label class="form-label">Deskripsi</label>
-                                <textarea name="deskripsi" class="form-control tinymce-editor"
+                                <textarea id="deskripsi" name="deskripsi" class="form-control tinymce-editor"
                                           rows="4">{{ old('deskripsi', $data->deskripsi ?? '') }}</textarea>
                             </div>
+                            </div>
 
+                            <div id="field-kota">
                             <div class="mb-3">
                                 <label class="form-label">Kota <small class="text-muted">(opsional)</small></label>
                                 <input type="text" name="kota" class="form-control"
                                        value="{{ old('kota', $data->kota ?? '') }}" placeholder="Contoh: Jakarta">
                             </div>
+                            </div>
 
+                            <div id="field-tanggal-lokasi">
                             <div class="mb-3">
                                 <label class="form-label">Tanggal &amp; Lokasi <small class="text-muted">(opsional)</small></label>
                                 <input type="text" name="tanggal_lokasi" class="form-control"
                                        value="{{ old('tanggal_lokasi', $data->tanggal_lokasi ?? '') }}"
                                        placeholder="Contoh: 15 Maret 2017, Hotel Santika Jakarta">
                             </div>
+                            </div>
 
+                            <div id="field-speaker">
                             <div class="mb-3">
                                 <label class="form-label">Speaker <small class="text-muted">(opsional)</small></label>
                                 <input type="text" name="speaker" class="form-control"
                                        value="{{ old('speaker', $data->speaker ?? '') }}"
                                        placeholder="Nama pembicara / narasumber">
+                            </div>
                             </div>
 
                             <div class="mb-3">
@@ -90,6 +107,7 @@
                                        value="{{ old('urutan', $data->urutan ?? 1) }}" min="0" required>
                             </div>
 
+                            <div id="field-gambar">
                             <div class="mb-3">
                                 <label class="form-label">Gambar</label>
                                 @if(isset($data) && $data->gambar)
@@ -105,6 +123,7 @@
                                     </div>
                                 @endif
                                 <input type="file" name="gambar" class="form-control" accept="image/*">
+                            </div>
                             </div>
 
                             <div class="d-flex gap-2">
@@ -123,3 +142,108 @@
     <div class="content-backdrop fade"></div>
 </div>
 @endsection
+
+@push('js')
+<script>
+(function () {
+    'use strict';
+
+    /**
+     * Terapkan visibilitas/state field sesuai template yang diterima dari endpoint AJAX.
+     * @param {string|null} template  — 'bebras_challenge' | 'workshop' | 'pengumuman_hasil' | null
+     */
+    function applyTemplate(template) {
+        const fieldKota          = document.getElementById('field-kota');
+        const fieldTanggalLokasi = document.getElementById('field-tanggal-lokasi');
+        const fieldSpeaker       = document.getElementById('field-speaker');
+        const fieldGambar        = document.getElementById('field-gambar');
+
+        if (template === 'bebras_challenge' || template === 'pengumuman_hasil') {
+            // Inisialisasi TinyMCE pada #deskripsi jika belum aktif
+            if (typeof tinymce !== 'undefined' && !tinymce.get('deskripsi')) {
+                initTinyMCE('#deskripsi');
+            }
+
+            // Tampilkan field gambar
+            fieldGambar.style.display = '';
+            fieldGambar.querySelectorAll('input, select, textarea').forEach(el => {
+                el.disabled = false;
+            });
+
+            // Sembunyikan, nonaktifkan, dan kosongkan kota / tanggal_lokasi / speaker
+            [fieldKota, fieldTanggalLokasi, fieldSpeaker].forEach(function (field) {
+                field.style.display = 'none';
+                field.querySelectorAll('input, select, textarea').forEach(function (el) {
+                    el.disabled = true;
+                    el.value = '';
+                });
+            });
+
+        } else if (template === 'workshop') {
+            // Destroy TinyMCE jika aktif — kembalikan ke textarea biasa
+            if (typeof tinymce !== 'undefined' && tinymce.get('deskripsi')) {
+                tinymce.get('deskripsi').remove();
+            }
+
+            // Tampilkan dan aktifkan semua field
+            [fieldKota, fieldTanggalLokasi, fieldSpeaker, fieldGambar].forEach(function (field) {
+                field.style.display = '';
+                field.querySelectorAll('input, select, textarea').forEach(function (el) {
+                    el.disabled = false;
+                });
+            });
+
+        } else {
+            // null / fallback — tampilkan semua field, biarkan TinyMCE tetap berjalan
+            [fieldKota, fieldTanggalLokasi, fieldSpeaker, fieldGambar].forEach(function (field) {
+                field.style.display = '';
+                field.querySelectorAll('input, select, textarea').forEach(function (el) {
+                    el.disabled = false;
+                });
+            });
+        }
+    }
+
+    /**
+     * Ambil template untuk menu yang dipilih via AJAX lalu terapkan.
+     * @param {string} menuId
+     * @param {string} baseUrl  — URL dengan placeholder ':id'
+     */
+    function fetchAndApplyTemplate(menuId, baseUrl) {
+        if (!menuId) {
+            applyTemplate(null);
+            return;
+        }
+        const url = baseUrl.replace(':id', menuId);
+        fetch(url)
+            .then(function (response) {
+                if (!response.ok) { throw new Error('HTTP ' + response.status); }
+                return response.json();
+            })
+            .then(function (data) {
+                applyTemplate(data.template ?? null);
+            })
+            .catch(function () {
+                applyTemplate(null);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const select  = document.getElementById('menu-kegiatan-select');
+        if (!select) { return; }
+
+        const baseUrl = select.dataset.templateUrl;
+
+        // Listener change untuk pemilihan menu baru
+        select.addEventListener('change', function () {
+            fetchAndApplyTemplate(this.value, baseUrl);
+        });
+
+        // Mode edit: dropdown sudah terisi → terapkan state field secara otomatis
+        if (select.value) {
+            fetchAndApplyTemplate(select.value, baseUrl);
+        }
+    });
+})();
+</script>
+@endpush
