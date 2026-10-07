@@ -85,7 +85,7 @@
 
                                 <!-- Deskripsi -->
                                 <div class="text-gray-600 text-sm mb-3 line-clamp-vertical break-words" style="max-height: 4.5rem; overflow: hidden;">
-                                    {!! $berita->deskripsi !!}
+                                    {{ \Illuminate\Support\Str::limit(strip_tags($berita->deskripsi), 180) }}
                                 </div>
                             </div>
 
@@ -130,7 +130,7 @@
                     </div>
                 </div>
 
-                <div id="modalDeskripsi" class="prose max-w-none text-gray-700 leading-relaxed text-sm md:text-base"></div>
+                <div id="modalDeskripsi" class="tiny-content prose max-w-none text-gray-700 leading-relaxed text-sm md:text-base"></div>
             </div>
 
             {{-- Footer Modal --}}

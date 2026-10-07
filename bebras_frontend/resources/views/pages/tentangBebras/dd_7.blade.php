@@ -5,7 +5,7 @@
 @section('content')
     <section class="w-full px-4 py-10 md:py-16 bg-gradient-to-br from-[#F7FBFF] via-white to-[#EAF4FC]">
         <div class="max-w-6xl mx-auto">
-            <header class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0088B8] via-[#00CAFF] to-[#38BDF8] px-6 py-10 md:px-12 md:py-14 text-center shadow-xl">
+            <header class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#063B5C] via-[#087E9B] to-[#00B8D4] px-6 py-10 md:px-12 md:py-14 text-center shadow-xl">
                 <div class="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10"></div>
                 <div class="absolute -bottom-28 -left-10 h-64 w-64 rounded-full bg-[#F7C948]/20"></div>
                 <div class="relative">
