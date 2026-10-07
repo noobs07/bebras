@@ -53,6 +53,31 @@
                                     <small class="text-muted">Biarkan kosong untuk menu tingkat pertama (muncul di dropdown Kegiatan).</small>
                                 </div>
 
+                                {{-- Template --}}
+                                <div class="col-md-6" id="template-field">
+                                    <label for="template" class="form-label">Template</label>
+                                    <select id="template" name="template"
+                                            class="form-select @error('template') is-invalid @enderror">
+                                        <option value="" {{ old('template', $data->template ?? '') === '' ? 'selected' : '' }}>-- Tanpa Template --</option>
+                                        <option value="bebras_challenge" {{ old('template', $data->template ?? '') === 'bebras_challenge' ? 'selected' : '' }}>Bebras Challenge</option>
+                                        <option value="workshop" {{ old('template', $data->template ?? '') === 'workshop' ? 'selected' : '' }}>Workshop</option>
+                                        <option value="pengumuman_hasil" {{ old('template', $data->template ?? '') === 'pengumuman_hasil' ? 'selected' : '' }}>Pengumuman Hasil</option>
+                                    </select>
+                                    @error('template')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="text-muted">Template tampilan halaman kegiatan di frontend (hanya untuk menu induk).</small>
+                                </div>
+
+                                {{-- Pesan Template Diwarisi --}}
+                                <div class="col-md-6" id="template-inherited-msg" style="display:none;">
+                                    <label class="form-label">Template</label>
+                                    <div class="alert alert-info py-2 mb-0">
+                                        <i class="bx bx-info-circle me-1"></i>
+                                        Template diwarisi dari parent.
+                                    </div>
+                                </div>
+
                                 {{-- Nama Menu --}}
                                 <div class="col-md-6">
                                     <label for="nama_menu" class="form-label">Nama Menu <span class="text-danger">*</span></label>
@@ -250,6 +275,24 @@
                 .replace(/^-+/, '')
                 .replace(/-+$/, '');
         }
+
+        // ── Toggle field Template berdasarkan parent_id ──
+        function toggleTemplateField() {
+            const parentId       = document.getElementById('parent_id').value;
+            const templateField  = document.getElementById('template-field');
+            const inheritedMsg   = document.getElementById('template-inherited-msg');
+
+            if (parentId) {
+                templateField.style.display  = 'none';
+                if (inheritedMsg) inheritedMsg.style.display = 'block';
+            } else {
+                templateField.style.display  = 'block';
+                if (inheritedMsg) inheritedMsg.style.display = 'none';
+            }
+        }
+
+        document.getElementById('parent_id').addEventListener('change', toggleTemplateField);
+        toggleTemplateField(); // terapkan state awal saat halaman dimuat
     });
 </script>
 @endpush

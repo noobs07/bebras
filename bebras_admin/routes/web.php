@@ -134,6 +134,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/{id}', [MenuKegiatanController::class, 'destroy'])->name('menu_kegiatan.destroy');
     });
 
+    // AJAX: Resolusi template menu kegiatan (harus sebelum prefix 'kegiatan')
+    Route::get('/kegiatan/menu/{menuKegiatan}/template', [KegiatanController::class, 'getMenuTemplate'])->name('kegiatan.menu.template');
+
     // Kegiatan (item kartu per menu)
     Route::prefix('kegiatan')->group(function () {
         Route::get('/', [KegiatanController::class, 'index'])->name('kegiatan.index');

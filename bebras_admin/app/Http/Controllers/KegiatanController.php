@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use App\Models\MenuKegiatan;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -66,10 +67,15 @@ class KegiatanController extends Controller
         }
     }
 
+    public function getMenuTemplate(MenuKegiatan $menuKegiatan): JsonResponse
+    {
+        return response()->json(['template' => $menuKegiatan->resolveTemplate()]);
+    }
+
     public function create(Request $request)
     {
         $breadcrumbs       = $this->breadCrumbs('Tambah Kegiatan');
-        $menuList          = MenuKegiatan::orderBy('urutan')->get();
+        $menuList          = MenuKegiatan::whereDoesntHave('children')->with('parent')->orderBy('urutan')->get();
         $defaultMenuId     = $request->query('menu_kegiatan_id');
         return view('kegiatan.form', compact('breadcrumbs', 'menuList', 'defaultMenuId'));
     }
@@ -114,8 +120,17 @@ class KegiatanController extends Controller
     {
         $breadcrumbs = $this->breadCrumbs('Edit Kegiatan');
         $data        = Kegiatan::findOrFail($id);
-        $menuList    = MenuKegiatan::orderBy('urutan')->get();
-        return view('kegiatan.form', compact('breadcrumbs', 'data', 'menuList'));
+        $menuList    = MenuKegiatan::whereDoesntHave('children')->with('parent')->orderBy('urutan')->get();
+
+        $isMenuNotLeaf = false;
+        if ($data->menuKegiatan && $data->menuKegiatan->children()->exists()) {
+            $isMenuNotLeaf = true;
+            if (!$menuList->contains('id', $data->menuKegiatan->id)) {
+                $menuList->push($data->menuKegiatan->load('parent'));
+            }
+        }
+
+        return view('kegiatan.form', compact('breadcrumbs', 'data', 'menuList', 'isMenuNotLeaf'));
     }
 
     public function update(Request $request, $id)

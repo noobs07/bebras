@@ -135,8 +135,10 @@
             plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
             toolbar: 'undo redo | blocks | bold italic backcolor | ' +
                 'alignleft aligncenter alignright alignjustify | ' +
-                'bullist numlist outdent indent | table | removeformat | help',
+                'bullist numlist outdent indent | table | code media | removeformat | help',
             menubar: 'file edit view insert format tools table help',
+            extended_valid_elements: 'iframe[src|title|width|height|allowfullscreen|frameborder|scrolling|style|class|sandbox|allow]',
+            sandbox_iframes: false,
             height: 400
         });
     }

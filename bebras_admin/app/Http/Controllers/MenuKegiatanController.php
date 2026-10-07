@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class MenuKegiatanController extends Controller
@@ -66,9 +67,14 @@ class MenuKegiatanController extends Controller
             'url'       => 'nullable|url|max:500',
             'gambar'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'urutan'    => 'required|integer|min:0',
+            'template'  => ['nullable', Rule::in(['bebras_challenge', 'workshop', 'pengumuman_hasil'])],
         ]);
 
         $validated['slug'] = $validated['slug'] ?: Str::slug($validated['nama_menu']);
+
+        if (!empty($validated['parent_id'])) {
+            $validated['template'] = null;
+        }
 
         DB::beginTransaction();
         try {
@@ -109,9 +115,14 @@ class MenuKegiatanController extends Controller
             'url'       => 'nullable|url|max:500',
             'gambar'    => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
             'urutan'    => 'required|integer|min:0',
+            'template'  => ['nullable', Rule::in(['bebras_challenge', 'workshop', 'pengumuman_hasil'])],
         ]);
 
         $validated['slug'] = $validated['slug'] ?: Str::slug($validated['nama_menu']);
+
+        if (!empty($validated['parent_id'])) {
+            $validated['template'] = null;
+        }
 
         DB::beginTransaction();
         try {
