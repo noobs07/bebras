@@ -67,37 +67,29 @@
                             @endif
 
                             <div class="p-6 md:p-10">
-                                {{-- Card Header & Metadata --}}
-                                <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-cyan-100">
-                                    @if($kegiatan->kota || $tglFormatted || $kegiatan->speaker)
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            @if($kegiatan->kota)
-                                                <span class="inline-flex items-center gap-1.5 font-semibold text-xs md:text-sm text-[#087E9B] bg-[#E6F7FF] px-3.5 py-1.5 rounded-full border border-sky-200/80">
-                                                    <i class="fa-solid fa-location-dot text-xs text-[#087E9B]"></i>
-                                                    {{ $kegiatan->kota }}
-                                                </span>
-                                            @endif
-                                            @if($tglFormatted)
-                                                <span class="inline-flex items-center gap-1.5 font-medium text-xs md:text-sm text-slate-700 bg-sky-50/70 px-3.5 py-1.5 rounded-full border border-sky-100">
-                                                    <i class="fa-regular fa-calendar-days text-xs text-sky-600"></i>
-                                                    {{ $tglFormatted }}
-                                                </span>
-                                            @endif
-                                            @if($kegiatan->speaker)
-                                                <span class="inline-flex items-center gap-1.5 font-medium text-xs md:text-sm text-slate-700 bg-slate-50 px-3.5 py-1.5 rounded-full border border-slate-200/80">
-                                                    <i class="fa-solid fa-user-tie text-xs text-slate-500"></i>
-                                                    {{ $kegiatan->speaker }}
-                                                </span>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <div></div>
+                                {{-- Metadata badges (kota, tanggal, speaker) — only if available --}}
+                                @if($kegiatan->kota || $tglFormatted || $kegiatan->speaker)
+                                <div class="flex flex-wrap items-center gap-2 mb-5 pb-4 border-b border-cyan-100/70">
+                                    @if($kegiatan->kota)
+                                        <span class="inline-flex items-center gap-1.5 font-semibold text-xs md:text-sm text-[#087E9B] bg-[#E6F7FF] px-3.5 py-1.5 rounded-full border border-sky-200/80">
+                                            <i class="fa-solid fa-location-dot text-xs text-[#087E9B]"></i>
+                                            {{ $kegiatan->kota }}
+                                        </span>
                                     @endif
-
-                                    <span class="text-xs font-bold text-[#087E9B] bg-[#E6F7FF] px-3 py-1 rounded-full border border-cyan-200">
-                                        Kegiatan #{{ $index + 1 }}
-                                    </span>
+                                    @if($tglFormatted)
+                                        <span class="inline-flex items-center gap-1.5 font-medium text-xs md:text-sm text-slate-700 bg-sky-50/70 px-3.5 py-1.5 rounded-full border border-sky-100">
+                                            <i class="fa-regular fa-calendar-days text-xs text-sky-600"></i>
+                                            {{ $tglFormatted }}
+                                        </span>
+                                    @endif
+                                    @if($kegiatan->speaker)
+                                        <span class="inline-flex items-center gap-1.5 font-medium text-xs md:text-sm text-slate-700 bg-slate-50 px-3.5 py-1.5 rounded-full border border-slate-200/80">
+                                            <i class="fa-solid fa-user-tie text-xs text-slate-500"></i>
+                                            {{ $kegiatan->speaker }}
+                                        </span>
+                                    @endif
                                 </div>
+                                @endif
 
                                 {{-- Judul Kegiatan --}}
                                 <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 leading-snug mb-4">
@@ -113,13 +105,32 @@
                     @endforeach
                 </div>
             @else
-                {{-- Empty State --}}
-                <div class="bg-white rounded-2xl p-12 text-center border border-cyan-100 shadow-sm max-w-2xl mx-auto">
-                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[#E6F7FF] flex items-center justify-center text-[#087E9B]">
-                        <i class="fa-regular fa-folder-open text-2xl"></i>
+                {{-- Empty State —— premium design --}}
+                <div class="relative overflow-hidden bg-white rounded-3xl border border-cyan-100 shadow-lg max-w-2xl mx-auto">
+                    {{-- Top accent --}}
+                    <div class="h-1.5 bg-gradient-to-r from-[#063B5C] via-[#087E9B] to-[#F7C948]"></div>
+
+                    <div class="px-10 py-14 text-center">
+                        {{-- Icon --}}
+                        <div class="relative inline-flex items-center justify-center mb-6">
+                            <div class="absolute w-20 h-20 rounded-full bg-[#E6F7FF] animate-pulse opacity-60"></div>
+                            <div class="relative w-16 h-16 rounded-full bg-gradient-to-br from-[#E6F7FF] to-[#bae6fd] flex items-center justify-center shadow-md">
+                                <i class="fa-solid fa-trophy text-2xl text-[#087E9B]"></i>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-extrabold text-slate-800 mb-2">Konten Belum Tersedia</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed max-w-sm mx-auto">
+                            Informasi mekanisme, panduan, dan kegiatan Bebras Challenge untuk tahun ini
+                            akan segera ditampilkan di halaman ini.
+                        </p>
+
+                        <div class="mt-6 flex flex-wrap justify-center gap-3">
+                            <span class="inline-flex items-center gap-2 text-xs font-medium text-[#087E9B] bg-[#E6F7FF] px-4 py-2 rounded-full border border-sky-200">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Segera hadir
+                            </span>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-800">Belum Ada Konten Tantangan</h3>
-                    <p class="text-sm text-slate-500 mt-1">Informasi kegiatan Bebras Challenge akan ditampilkan di halaman ini.</p>
                 </div>
             @endif
         </div>
