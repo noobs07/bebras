@@ -192,7 +192,7 @@
             let kontakId = $(this).data('id');
 
             $.ajax({
-                url: '/kontak/detail/' + kontakId, // route untuk ambil detail
+                url: "{{ url('kontak/detail') }}/" + kontakId, // route untuk ambil detail
                 method: 'GET',
                 success: function(res) {
                     let list = $('#detailList');

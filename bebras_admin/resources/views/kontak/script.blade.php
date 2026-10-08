@@ -70,7 +70,7 @@
 
             $(document).on('click', '.btn-edit', function() {
                 let id = $(this).data('id');
-                $.get(`/kontak/${id}/edit`, function(data) {
+                $.get("{{ url('kontak') }}/" + id + "/edit", function(data) {
                     $('#kontak_id').val(data.id);
                     $('#nama').val(data.nama || '');
                     $('#institusi').val(data.institusi || '');
@@ -99,7 +99,7 @@
                 let id = $('#kontak_id').val();
 
                 $.ajax({
-                    url: `/kontak/${id}`,
+                    url: "{{ url('kontak') }}/" + id,
                     method: 'PUT',
                     data: $(this).serialize(),
                     success: function(res) {
@@ -133,7 +133,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `/kontak/${id}`,
+                            url: "{{ url('kontak') }}/" + id,
                             type: 'DELETE',
                             data: {
                                 _token: '{{ csrf_token() }}'
