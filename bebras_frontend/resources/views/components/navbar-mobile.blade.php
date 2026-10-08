@@ -182,13 +182,15 @@
             class="text-white block px-3 py-2 rounded-md text-base font-medium nav-link">Latihan</a>
         <a href="{{ route('kontak') }}"
             class="text-white block px-3 py-2 rounded-md text-base font-medium nav-link">Kontak</a>
-        <div class="relative mt-4 px-3">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <i class="fas fa-search text-gray-400 ms-2"></i>
-            </div>
-            <input type="text"
-                class="block w-full pl-10 pr-3 py-2 border border-transparent rounded-md leading-5 bg-white text-white placeholder-gray-200 focus:outline-none focus:bg-white focus:text-gray-900 focus:ring-0"
-                placeholder="Cari...">
+        <div class="relative mt-4 px-3 pb-3">
+            <form action="{{ route('search') }}" method="GET" class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                    <i class="fas fa-search text-gray-400 ms-2"></i>
+                </div>
+                <input type="text" id="searchInputMobile" name="search"
+                    class="block w-full pl-10 pr-3 py-2 border border-transparent rounded-lg leading-5 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-bebrasBlue text-sm"
+                    autocomplete="off" placeholder="Cari...">
+            </form>
         </div>
 
     </div>

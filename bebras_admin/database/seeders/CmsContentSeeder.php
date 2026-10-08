@@ -435,11 +435,19 @@ class CmsContentSeeder extends Seeder
         ]);
         MenuKegiatan::create([
             'parent_id' => $m2->id,
+            'nama_menu' => '2025',
+            'slug' => 'challenge-2025',
+            'judul' => 'Bebras Challenge 2025',
+            'body' => '<p>Informasi pelaksanaan dan panduan Bebras Indonesia Challenge 2025.</p>',
+            'urutan' => 1,
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m2->id,
             'nama_menu' => '2024',
             'slug' => 'challenge-2024',
             'judul' => 'Bebras Challenge 2024',
             'body' => '<p>Informasi pelaksanaan dan panduan Bebras Indonesia Challenge 2024.</p>',
-            'urutan' => 1,
+            'urutan' => 2,
         ]);
         MenuKegiatan::create([
             'parent_id' => $m2->id,
@@ -447,7 +455,7 @@ class CmsContentSeeder extends Seeder
             'slug' => 'challenge-2023',
             'judul' => 'Bebras Challenge 2023',
             'body' => '<p>Dokumentasi tantangan Bebras Indonesia Challenge 2023.</p>',
-            'urutan' => 2,
+            'urutan' => 3,
         ]);
         MenuKegiatan::create([
             'parent_id' => $m2->id,
@@ -455,7 +463,7 @@ class CmsContentSeeder extends Seeder
             'slug' => 'challenge-2022',
             'judul' => 'Bebras Challenge 2022',
             'body' => '<p>Dokumentasi tantangan Bebras Indonesia Challenge 2022.</p>',
-            'urutan' => 3,
+            'urutan' => 4,
         ]);
 
         MenuKegiatan::create([
@@ -474,11 +482,19 @@ class CmsContentSeeder extends Seeder
         ]);
         MenuKegiatan::create([
             'parent_id' => $m4->id,
+            'nama_menu' => '2025',
+            'slug' => 'pengumuman-2025',
+            'judul' => 'Pengumuman Hasil 2025',
+            'body' => '<p>Daftar pemenang dan statistik perolehan skor peserta Bebras Challenge 2025.</p>',
+            'urutan' => 1,
+        ]);
+        MenuKegiatan::create([
+            'parent_id' => $m4->id,
             'nama_menu' => '2024',
             'slug' => 'pengumuman-2024',
             'judul' => 'Pengumuman Hasil 2024',
             'body' => '<p>Daftar pemenang dan statistik perolehan skor peserta Bebras Challenge 2024.</p>',
-            'urutan' => 1,
+            'urutan' => 2,
         ]);
         MenuKegiatan::create([
             'parent_id' => $m4->id,
@@ -486,7 +502,7 @@ class CmsContentSeeder extends Seeder
             'slug' => 'pengumuman-2023',
             'judul' => 'Pengumuman Hasil 2023',
             'body' => '<p>Daftar pemenang dan statistik perolehan skor peserta Bebras Challenge 2023.</p>',
-            'urutan' => 2,
+            'urutan' => 3,
         ]);
         MenuKegiatan::create([
             'parent_id' => $m4->id,
@@ -494,7 +510,7 @@ class CmsContentSeeder extends Seeder
             'slug' => 'pengumuman-2022',
             'judul' => 'Pengumuman Hasil 2022',
             'body' => '<p>Daftar pemenang dan statistik perolehan skor peserta Bebras Challenge 2022.</p>',
-            'urutan' => 3,
+            'urutan' => 4,
         ]);
 
         $m5 = MenuKegiatan::create([

@@ -6,6 +6,7 @@ use App\Http\Controllers\SearchController;
 
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 Route::get('/search/suggest', [SearchController::class, 'suggest'])->name('search.suggest');
+Route::get('/search/not-found', [SearchController::class, 'notFound'])->name('search.not-found');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 use App\Http\Controllers\TentangBebrasController;
