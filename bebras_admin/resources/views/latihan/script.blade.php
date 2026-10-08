@@ -78,7 +78,7 @@
              $(document).on("click", ".btn-detail", function() {
                  let id = $(this).data("id");
 
-                 $.get("/latihan/" + id + "/deskripsi", function(res) {
+                 $.get("{{ url('latihan') }}/" + id + "/deskripsi", function(res) {
                      $("#detail_nama").text(res.nama);
                      $("#detail_deskripsi").text(res.deskripsi || "-");
 
@@ -95,7 +95,7 @@
              $(document).on("click", ".btn-edit", function() {
                  let id = $(this).data("id");
                  $.ajax({
-                     url: "/latihan/" + id + "/edit",
+                     url: "{{ url('latihan') }}/" + id + "/edit",
                      method: "GET",
                      success: function(res) {
                          $("#edit_id").val(res.id);
@@ -125,7 +125,7 @@
                  let formData = new FormData(this);
 
                  $.ajax({
-                     url: "/latihan/" + id + "/update",
+                     url: "{{ url('latihan') }}/" + id + "/update",
                      method: "POST",
                      data: formData,
                      processData: false,
@@ -151,7 +151,7 @@
 
                  if (confirm("Yakin ingin menghapus data ini?")) {
                      $.ajax({
-                         url: "/latihan/" + id,
+                         url: "{{ url('latihan') }}/" + id,
                          type: "DELETE",
                          data: {
                              _token: "{{ csrf_token() }}"

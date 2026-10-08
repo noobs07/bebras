@@ -212,7 +212,7 @@
         let formData = $(this).serialize();
 
         $.ajax({
-            url: "/akun/" + id,   
+            url: "{{ url('akun') }}/" + id,   
             type: "POST",       
             data: formData + '&_method=PUT',
             success: function(res) {
