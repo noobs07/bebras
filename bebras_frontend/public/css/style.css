@@ -180,17 +180,30 @@ body {
     color: #475569;
 }
 
-/* Tables - Superior styling for TinyMCE Tables */
-.tiny-content table, .prose table {
-    width: 100% !important;
-    border-collapse: separate !important;
-    border-spacing: 0 !important;
+/* Tables — scrollable & consistent across all environments */
+
+/* Scrollable wrapper injected by JS */
+.table-scroll-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
     margin-top: 1.25rem !important;
     margin-bottom: 1.25rem !important;
-    border: 1px solid #e2e8f0 !important;
     border-radius: 0.75rem !important;
-    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.tiny-content table, .prose table {
+    /* DO NOT use width:100% — let table be as wide as its content needs */
+    min-width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    border: none !important;  /* border moved to .table-scroll-wrap */
+    border-radius: 0 !important;
+    overflow: visible !important; /* must not be hidden so columns can breathe */
+    box-shadow: none !important;
 }
 
 .tiny-content table th, .prose table th {
@@ -204,6 +217,7 @@ body {
     text-align: left !important;
     border-bottom: 2px solid #cbd5e1 !important;
     border-right: 1px solid #e2e8f0 !important;
+    white-space: nowrap !important;  /* prevent header text from wrapping */
 }
 
 .tiny-content table th:last-child, .prose table th:last-child {
@@ -217,6 +231,7 @@ body {
     color: #334155 !important;
     font-size: 0.9375rem !important;
     vertical-align: top !important;
+    min-width: 120px !important; /* prevent extreme column narrowing */
 }
 
 .tiny-content table td:last-child, .prose table td:last-child {
@@ -234,15 +249,6 @@ body {
 
 .tiny-content table tr:last-child td, .prose table tr:last-child td {
     border-bottom: none !important;
-}
-
-/* Responsive Table Wrapper */
-.tiny-content table-responsive,
-.tiny-content div:has(> table) {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
 }
 
 /* Images in TinyMCE Content */

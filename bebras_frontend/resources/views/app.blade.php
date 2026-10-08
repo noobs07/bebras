@@ -60,6 +60,21 @@
     @include('components.footer')
     <script src="{{ asset('js/app.js') }}"></script>
     {{-- @vite(['resources/js/app.js']) --}}
+
+    {{-- Auto-wrap tables inside rich-text content for horizontal scrollability --}}
+    <script>
+        (function () {
+            document.querySelectorAll('.tiny-content table, .prose table').forEach(function (table) {
+                // Skip if already wrapped
+                if (table.parentElement && table.parentElement.classList.contains('table-scroll-wrap')) return;
+                var wrap = document.createElement('div');
+                wrap.className = 'table-scroll-wrap';
+                table.parentNode.insertBefore(wrap, table);
+                wrap.appendChild(table);
+            });
+        })();
+    </script>
+
     @stack('scripts')
 
 </body>
