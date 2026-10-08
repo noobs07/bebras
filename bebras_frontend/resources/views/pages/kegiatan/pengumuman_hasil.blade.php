@@ -1,4 +1,4 @@
-﻿@extends('app')
+@extends('app')
 
 @section('title', $menu->judul ?? $menu->nama_menu)
 
@@ -60,7 +60,7 @@
 
         @if($hasExcel)
             @php $groupKeys = array_keys($excelGroups); @endphp
-            <div class="space-y-2 mb-6">
+            <div class="space-y-6 mb-6">
                 @if(count($excelGroups) > 1)
                 <div class="flex flex-wrap gap-2 mb-3" id="excel-tabs">
                     @foreach($groupKeys as $i => $label)
@@ -72,6 +72,13 @@
                             {{ $label }}
                         </button>
                     @endforeach
+                    <button
+                        onclick="switchTab('all')"
+                        id="tab-btn-all"
+                        class="tab-btn px-5 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 bg-white text-[#063B5C] border-[#087E9B]/30 hover:bg-[#E6F7FF]">
+                        <i class="fa-solid fa-layer-group mr-1.5"></i>
+                        All
+                    </button>
                 </div>
                 @endif
 
@@ -87,9 +94,9 @@
                             </div>
                             <div class="flex items-center gap-2">
                                 <div class="relative hidden sm:block">
-                                    <input type="text" id="search-{{ $i }}" placeholder="Cari..."
+                                    <input type="text" id="search-{{ $i }}" placeholder="Cari {{ $label }}..."
                                         oninput="filterTable({{ $i }}, this.value)"
-                                        class="text-xs pl-7 pr-3 py-1.5 rounded-lg border border-white/30 bg-white/15 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 w-40">
+                                        class="text-xs pl-7 pr-3 py-1.5 rounded-lg border border-white/30 bg-white/15 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 w-44">
                                     <i class="fa-solid fa-magnifying-glass absolute left-2 top-1/2 -translate-y-1/2 text-white/60 text-xs"></i>
                                 </div>
                                 <a href="{{ asset($filename) }}" download
@@ -197,7 +204,7 @@
 @if($hasExcel ?? false)
 <script>
 (function(){
-    var panels = @json(array_keys($excelGroups ?? []));
+    var panelKeys = @json(array_keys($excelGroups ?? []));
 
     function esc(v){
         if(v==null) return '';
@@ -207,80 +214,105 @@
     function renderSheet(tableEl, ws, infoEl){
         var range = XLSX.utils.decode_range(ws['!ref']||'A1');
         var html = '<thead><tr><th>#</th>';
-        for(var C=range.s.c;C<=range.e.c;C++){
-            var addr=XLSX.utils.encode_cell({r:range.s.r,c:C});
-            var cell=ws[addr]; var val=cell?XLSX.utils.format_cell(cell):'';
-            html+='<th>'+esc(val)+'</th>';
+        for(var C=range.s.c; C<=range.e.c; C++){
+            var addr = XLSX.utils.encode_cell({r:range.s.r, c:C});
+            var cell = ws[addr]; var val = cell ? XLSX.utils.format_cell(cell) : '';
+            html += '<th>' + esc(val) + '</th>';
         }
-        html+='</tr></thead><tbody>';
-        var cnt=0;
-        for(var R=range.s.r+1;R<=range.e.r;R++){
-            var row='<td>'+(R)+'</td>'; var has=false;
-            for(var C=range.s.c;C<=range.e.c;C++){
-                var addr=XLSX.utils.encode_cell({r:R,c:C});
-                var cell=ws[addr]; var val=cell?XLSX.utils.format_cell(cell):'';
-                if(val) has=true;
-                row+='<td>'+esc(val)+'</td>';
+        html += '</tr></thead><tbody>';
+        var cnt = 0;
+        for(var R=range.s.r+1; R<=range.e.r; R++){
+            var row = '<td>' + (R) + '</td>'; var has = false;
+            for(var C=range.s.c; C<=range.e.c; C++){
+                var addr = XLSX.utils.encode_cell({r:R, c:C});
+                var cell = ws[addr]; var val = cell ? XLSX.utils.format_cell(cell) : '';
+                if(val) has = true;
+                row += '<td>' + esc(val) + '</td>';
             }
-            if(has){html+='<tr>'+row+'</tr>'; cnt++;}
+            if(has){ html += '<tr>' + row + '</tr>'; cnt++; }
         }
-        html+='</tbody>';
-        tableEl.innerHTML=html;
-        if(infoEl) infoEl.textContent='Menampilkan '+cnt.toLocaleString('id-ID')+' baris data';
+        html += '</tbody>';
+        tableEl.innerHTML = html;
+        if(infoEl) infoEl.textContent = 'Menampilkan ' + cnt.toLocaleString('id-ID') + ' baris data';
     }
 
     async function loadExcel(idx){
-        var tbl=document.getElementById('excel-table-'+idx);
-        var wrap=document.getElementById('table-wrap-'+idx);
-        var load=document.getElementById('loading-'+idx);
-        var info=document.getElementById('row-info-'+idx);
-        if(!tbl||tbl.dataset.loaded==='1') return;
-        try{
-            var r=await fetch(tbl.dataset.src);
-            if(!r.ok) throw new Error('HTTP '+r.status);
-            var buf=await r.arrayBuffer();
-            var wb=XLSX.read(buf,{type:'array'});
-            var ws=wb.Sheets[wb.SheetNames[0]];
-            renderSheet(tbl,ws,info);
-            tbl.dataset.loaded='1';
+        var tbl = document.getElementById('excel-table-' + idx);
+        var wrap = document.getElementById('table-wrap-' + idx);
+        var load = document.getElementById('loading-' + idx);
+        var info = document.getElementById('row-info-' + idx);
+        if(!tbl || tbl.dataset.loaded === '1') return;
+        try {
+            var r = await fetch(tbl.dataset.src);
+            if(!r.ok) throw new Error('HTTP ' + r.status);
+            var buf = await r.arrayBuffer();
+            var wb = XLSX.read(buf, {type:'array'});
+            var ws = wb.Sheets[wb.SheetNames[0]];
+            renderSheet(tbl, ws, info);
+            tbl.dataset.loaded = '1';
             load.classList.add('hidden');
             wrap.classList.remove('hidden');
             if(info) info.classList.remove('hidden');
-        }catch(e){
-            load.innerHTML='<div class="text-center py-10 text-slate-400"><i class="fa-solid fa-circle-exclamation text-3xl text-rose-400 mb-2 block"></i><p class="text-sm">Gagal memuat file Excel.</p><p class="text-xs">'+e.message+'</p></div>';
+        } catch(e) {
+            load.innerHTML = '<div class="text-center py-10 text-slate-400"><i class="fa-solid fa-circle-exclamation text-3xl text-rose-400 mb-2 block"></i><p class="text-sm">Gagal memuat file Excel.</p><p class="text-xs">' + esc(e.message) + '</p></div>';
         }
     }
 
-    window.switchTab=function(idx){
-        for(var i=0;i<panels.length;i++){
-            var btn=document.getElementById('tab-btn-'+i);
-            var pan=document.getElementById('excel-panel-'+i);
-            if(i===idx){
-                if(btn){btn.classList.add('bg-[#063B5C]','text-white','border-[#063B5C]','shadow-md');btn.classList.remove('bg-white','text-[#063B5C]','border-[#087E9B]/30');}
-                if(pan) pan.classList.remove('hidden');
-                loadExcel(i);
-            }else{
-                if(btn){btn.classList.remove('bg-[#063B5C]','text-white','border-[#063B5C]','shadow-md');btn.classList.add('bg-white','text-[#063B5C]','border-[#087E9B]/30');}
-                if(pan) pan.classList.add('hidden');
+    window.switchTab = function(target){
+        var isAll = (target === 'all');
+
+        for(var i=0; i<panelKeys.length; i++){
+            var btn = document.getElementById('tab-btn-' + i);
+            if(btn){
+                if(!isAll && i === target){
+                    btn.classList.add('bg-[#063B5C]','text-white','border-[#063B5C]','shadow-md');
+                    btn.classList.remove('bg-white','text-[#063B5C]','border-[#087E9B]/30');
+                } else {
+                    btn.classList.remove('bg-[#063B5C]','text-white','border-[#063B5C]','shadow-md');
+                    btn.classList.add('bg-white','text-[#063B5C]','border-[#087E9B]/30');
+                }
+            }
+        }
+
+        var btnAll = document.getElementById('tab-btn-all');
+        if(btnAll){
+            if(isAll){
+                btnAll.classList.add('bg-[#063B5C]','text-white','border-[#063B5C]','shadow-md');
+                btnAll.classList.remove('bg-white','text-[#063B5C]','border-[#087E9B]/30');
+            } else {
+                btnAll.classList.remove('bg-[#063B5C]','text-white','border-[#063B5C]','shadow-md');
+                btnAll.classList.add('bg-white','text-[#063B5C]','border-[#087E9B]/30');
+            }
+        }
+
+        for(var i=0; i<panelKeys.length; i++){
+            var pan = document.getElementById('excel-panel-' + i);
+            if(pan){
+                if(isAll || i === target){
+                    pan.classList.remove('hidden');
+                    loadExcel(i);
+                } else {
+                    pan.classList.add('hidden');
+                }
             }
         }
     };
 
-    window.filterTable=function(idx,q){
-        var tbl=document.getElementById('excel-table-'+idx); if(!tbl) return;
-        q=q.toLowerCase().trim();
-        var rows=tbl.querySelectorAll('tbody tr'); var shown=0;
+    window.filterTable = function(idx, q){
+        var tbl = document.getElementById('excel-table-' + idx); if(!tbl) return;
+        q = q.toLowerCase().trim();
+        var rows = tbl.querySelectorAll('tbody tr'); var shown = 0;
         rows.forEach(function(row){
-            var match=!q||row.textContent.toLowerCase().includes(q);
-            row.style.display=match?'':'none';
-            row.classList.toggle('row-highlight',!!(q&&match));
+            var match = !q || row.textContent.toLowerCase().includes(q);
+            row.style.display = match ? '' : 'none';
+            row.classList.toggle('row-highlight', !!(q && match));
             if(match) shown++;
         });
-        var info=document.getElementById('row-info-'+idx);
-        if(info) info.textContent=q?'Ditemukan '+shown.toLocaleString('id-ID')+' baris yang cocok':'Menampilkan '+shown.toLocaleString('id-ID')+' baris data';
+        var info = document.getElementById('row-info-' + idx);
+        if(info) info.textContent = q ? 'Ditemukan ' + shown.toLocaleString('id-ID') + ' baris yang cocok' : 'Menampilkan ' + shown.toLocaleString('id-ID') + ' baris data';
     };
 
-    document.addEventListener('DOMContentLoaded',function(){ loadExcel(0); });
+    document.addEventListener('DOMContentLoaded', function(){ loadExcel(0); });
 })();
 </script>
 @endif
